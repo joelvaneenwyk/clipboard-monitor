@@ -1,16 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Security.Principal;
 using System.Collections.Generic;
 
-using WK.Libraries.SharpClipboardNS;
-
-namespace SharpClipboardPreview.Tests
+namespace SharpClipboard.Tests.WinForms
 {
-    /// <summary>
-    /// The main application window.
-    /// </summary>
     public partial class MainForm : Form
     {
         #region Constructor
@@ -18,14 +15,14 @@ namespace SharpClipboardPreview.Tests
         public MainForm()
         {
             InitializeComponent();
-
-            // Assign the various checkboxes to enable/disable 
-            // the supported clipboard formats respectively.
-            chkMonitorClipboard.Checked = sharpClipboard1.MonitorClipboard;
-            chkObserveTexts.Checked = sharpClipboard1.ObservableFormats.Texts;
-            chkObserveFiles.Checked = sharpClipboard1.ObservableFormats.Files;
-            chkObserveImages.Checked = sharpClipboard1.ObservableFormats.Images;
         }
+
+        #endregion
+
+        #region Fields
+
+        private static WK.Libraries.SharpClipboardNS.SharpClipboard clipboard =
+            new WK.Libraries.SharpClipboardNS.SharpClipboard();
 
         #endregion
 
@@ -56,17 +53,17 @@ namespace SharpClipboardPreview.Tests
             sharpClipboard1.ObservableFormats.Files = chkObserveFiles.Checked;
         }
 
-        private void sharpClipboard1_ClipboardChanged(object sender, SharpClipboard.ClipboardChangedEventArgs e)
+        private void sharpClipboard1_ClipboardChanged(object sender, WK.Libraries.SharpClipboardNS.SharpClipboard.ClipboardChangedEventArgs e)
         {
-            if (e.ContentType == SharpClipboard.ContentTypes.Text)
+            if (e.ContentType == WK.Libraries.SharpClipboardNS.SharpClipboard.ContentTypes.Text)
             {
                 txtCopiedTexts.Text = sharpClipboard1.ClipboardText;
-                
+
                 // Alternatively, you can use:
                 // ---------------------------
                 // txtCopiedTexts.Text = (string)e.Content;
             }
-            else if (e.ContentType == SharpClipboard.ContentTypes.Image)
+            else if (e.ContentType == WK.Libraries.SharpClipboardNS.SharpClipboard.ContentTypes.Image)
             {
                 pbCopiedImage.Image = sharpClipboard1.ClipboardImage;
 
@@ -74,7 +71,7 @@ namespace SharpClipboardPreview.Tests
                 // ---------------------------
                 // pbCopiedImage.Image = (Image)e.Content;
             }
-            else if (e.ContentType == SharpClipboard.ContentTypes.Files)
+            else if (e.ContentType == WK.Libraries.SharpClipboardNS.SharpClipboard.ContentTypes.Files)
             {
                 // Declare variable to add the list of copied files.
                 List<string> files = new List<string>();
@@ -90,12 +87,12 @@ namespace SharpClipboardPreview.Tests
                 // Add all copied files to the files ListBox.
                 lstCopiedFiles.Items.Clear();
                 lstCopiedFiles.Items.AddRange(files.ToArray());
-                
+
                 // Alternatively, you can use:
                 // ---------------------------
                 // lstCopiedFiles.Items.AddRange(((List<string>)e.Content).ToArray()));
             }
-            else if (e.ContentType == SharpClipboard.ContentTypes.Other)
+            else if (e.ContentType == WK.Libraries.SharpClipboardNS.SharpClipboard.ContentTypes.Other)
             {
                 // Do something with 'e.Content' or alternatively
                 // 'sharpClipboard1.ClipboardObject' property here...
@@ -110,11 +107,11 @@ namespace SharpClipboardPreview.Tests
                 txtCopiedTexts.Text = sharpClipboard1.ClipboardText.ToString();
             }
 
-            // If you wish to get details of the application from where 
-            // any text, file, image or other objects were cut/copied, 
+            // If you wish to get details of the application from where
+            // any text, file, image or other objects were cut/copied,
             // simply add a TextBox and uncomment the lines below.
             // --------------------------------------------------------
-            // textBox1.Text = 
+            // textBox1.Text =
             //     $"Name: {e.SourceApplication.Name} \n" +
             //     $"Title: {e.SourceApplication.Title} \n" +
             //     $"ID: {e.SourceApplication.ID} \n" +

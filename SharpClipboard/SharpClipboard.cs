@@ -1,21 +1,17 @@
-﻿#region Copyright
-
-/*
+﻿/*
  * Developer    : Willy Kimura (WK).
- * Library      : SharpCliboard.
+ * Library      : SharpClipboard.
  * License      : MIT.
- * 
+ *
  * This handy library was designed to assist .NET developers
- * monitor the system cliboard in an easier and pluggable
+ * monitor the system clipboard in an easier and pluggable
  * fashion that before. It provides support for detecting
  * data formats including texts, images & files. To use it
  * at design-time, simply add the component in the Toolbox
  * then drag-n-drop it inside your Form to customize its
  * options and features. Improvements are always welcome.
- * 
+ *
  */
-
-#endregion
 
 
 using System;
@@ -39,9 +35,8 @@ namespace WK.Libraries.SharpClipboardNS
     [DefaultProperty("MonitorClipboard")]
     [Description("Assists in anonymously monitoring the system clipboard by " +
                  "detecting any copied/cut data and the type of data it is.")]
-    public partial class SharpClipboard : Component
+    public sealed partial class SharpClipboard : Component
     {
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of <see cref="SharpClipboard"/>.
@@ -68,20 +63,16 @@ namespace WK.Libraries.SharpClipboardNS
             SetDefaults();
         }
 
-        #endregion
 
-        #region Fields
 
         private bool _monitorClipboard;
         private bool _observeLastEntry;
 
-        private Timer _timer = new Timer();
+        private readonly Timer _timer = new Timer();
         private ClipboardHandle _handle = new ClipboardHandle();
         private ObservableDataFormats _observableFormats = new ObservableDataFormats();
 
-        #endregion
 
-        #region Enumerations
 
         /// <summary>
         /// Provides a list of the supported clipboard content types.
@@ -109,11 +100,8 @@ namespace WK.Libraries.SharpClipboardNS
             Other = 3
         }
 
-        #endregion
 
-        #region Properties
-        
-        #region Browsable
+
 
         /// <summary>
         /// Gets or sets a value indicating whether the clipboard
@@ -125,7 +113,8 @@ namespace WK.Libraries.SharpClipboardNS
         public bool MonitorClipboard
         {
             get { return _monitorClipboard; }
-            set {
+            set
+            {
 
                 _monitorClipboard = value;
                 MonitorClipboardChanged?.Invoke(this, EventArgs.Empty);
@@ -135,8 +124,8 @@ namespace WK.Libraries.SharpClipboardNS
 
         /// <summary>
         /// When set to true, the last cut/copied clipboard item will
-        /// not be auto-picked once monitoring is enabled. However when 
-        /// set to false, the last cut/copied clipboard item will be 
+        /// not be auto-picked once monitoring is enabled. However when
+        /// set to false, the last cut/copied clipboard item will be
         /// auto-picked once monitoring is enabled.
         /// </summary>
         [Category("#Clipboard: Behaviour")]
@@ -147,7 +136,8 @@ namespace WK.Libraries.SharpClipboardNS
         public bool ObserveLastEntry
         {
             get { return _observeLastEntry; }
-            set {
+            set
+            {
 
                 _observeLastEntry = value;
                 ObserveLastEntryChanged?.Invoke(this, EventArgs.Empty);
@@ -166,7 +156,8 @@ namespace WK.Libraries.SharpClipboardNS
         public ObservableDataFormats ObservableFormats
         {
             get { return _observableFormats; }
-            set {
+            set
+            {
 
                 _observableFormats = value;
                 ObservableFormatsChanged?.Invoke(this, EventArgs.Empty);
@@ -183,60 +174,54 @@ namespace WK.Libraries.SharpClipboardNS
         [TypeConverter(typeof(StringConverter))]
         [Description("Sets the object that contains programmer-" +
                      "supplied data associated with the component.")]
-        public virtual object Tag { get; set; }
+        public object? Tag { get; set; }
 
-        #endregion
 
-        #region Non-browsable
 
         /// <summary>
         /// Gets the currently cut/copied clipboard text.
         /// </summary>
         [Browsable(false)]
-        public string ClipboardText { get; internal set; }
+        public string? ClipboardText { get; internal set; }
 
         /// <summary>
         /// Gets the currently cut/copied clipboard <see cref="object"/>.
         /// This is necessary when handling complex content copied to the clipboard.
         /// </summary>
         [Browsable(false)]
-        public object ClipboardObject { get; internal set; }
+        public object? ClipboardObject { get; internal set; }
 
         /// <summary>
         /// Gets the currently cut/copied clipboard file-path.
         /// </summary>
         [Browsable(false)]
-        public string ClipboardFile { get; internal set; }
+        public string? ClipboardFile { get; internal set; }
 
         /// <summary>
         /// Gets the currently cut/copied clipboard file-paths.
         /// </summary>
         [Browsable(false)]
-        public List<string> ClipboardFiles { get; internal set; } = new List<string>();
+        public List<string?> ClipboardFiles { get; internal set; } = new List<string?>();
 
         /// <summary>
         /// Gets the currently cut/copied clipboard image.
         /// </summary>
         [Browsable(false)]
-        public Image ClipboardImage { get; internal set; }
+        public Image? ClipboardImage { get; internal set; }
 
         /// <summary>
-        /// Lets you change the invisible clipboard-window-handle's title 
-        /// that is designed to receive broadcasted clipboard messages. This is 
-        /// however unnecessary for normal users but may be essential if you're 
+        /// Lets you change the invisible clipboard-window-handle's title
+        /// that is designed to receive broadcasted clipboard messages. This is
+        /// however unnecessary for normal users but may be essential if you're
         /// working under special circumstances that require supervision.
         /// The window will however remain hidden from all users.
         /// </summary>
         [Browsable(false)]
         public static string HandleCaption { get; set; } = string.Empty;
 
-        #endregion
 
-        #endregion
 
-        #region Methods
 
-        #region Public
 
         /// <summary>
         /// Gets the current foreground window's handle.
@@ -265,9 +250,7 @@ namespace WK.Libraries.SharpClipboardNS
             _handle.Close();
         }
 
-        #endregion
 
-        #region Private
 
         /// <summary>
         /// Apply library-default settings and launch code.
@@ -279,7 +262,7 @@ namespace WK.Libraries.SharpClipboardNS
             _timer.Enabled = true;
             _timer.Interval = 1000;
             _timer.Tick += OnLoad;
-        
+
             MonitorClipboard = true;
             ObserveLastEntry = true;
         }
@@ -289,7 +272,7 @@ namespace WK.Libraries.SharpClipboardNS
         /// </summary>
         /// <param name="content">The current clipboard content.</param>
         /// <param name="type">The current clipboard content-type.</param>
-        internal void Invoke(object content, ContentTypes type, SourceApplication source)
+        internal void Invoke(object? content, ContentTypes type, SourceApplication source)
         {
             ClipboardChanged?.Invoke(this, new ClipboardChangedEventArgs(content, type, source));
         }
@@ -300,15 +283,10 @@ namespace WK.Libraries.SharpClipboardNS
         [DllImport("user32.dll")]
         static extern IntPtr GetForegroundWindow();
 
-        #endregion
 
-        #endregion
 
-        #region Events
 
-        #region Public
 
-        #region Event Handlers
 
         /// <summary>
         /// This event is triggered whenever the
@@ -340,23 +318,20 @@ namespace WK.Libraries.SharpClipboardNS
         [Description("Occurs whenever the allowed observable formats have been changed.")]
         public event EventHandler<EventArgs> ObserveLastEntryChanged = null;
 
-        #endregion
 
-        #region Event Arguments
 
         /// <summary>
         /// Provides data for the <see cref="ClipboardChanged"/> event.
         /// </summary>
         public class ClipboardChangedEventArgs : EventArgs
         {
-            #region Constructor
 
             /// <summary>
             /// Provides data for the <see cref="ClipboardChanged"/> event.
             /// </summary>
             /// <param name="content">The current clipboard content.</param>
             /// <param name="contentType">The current clipboard-content-type.</param>
-            public ClipboardChangedEventArgs(object content, ContentTypes contentType, SourceApplication source)
+            public ClipboardChangedEventArgs(object? content, ContentTypes contentType, SourceApplication source)
             {
                 Content = content;
                 ContentType = contentType;
@@ -365,20 +340,16 @@ namespace WK.Libraries.SharpClipboardNS
                                                 source.Title, source.Path);
             }
 
-            #endregion
 
-            #region Fields
 
             private SourceApplication _source;
 
-            #endregion
 
-            #region Properties
 
             /// <summary>
             /// Gets the currently copied clipboard content.
             /// </summary>
-            public object Content { get; }
+            public object? Content { get; }
 
             /// <summary>
             /// Gets the currently copied clipboard content-type.
@@ -395,18 +366,14 @@ namespace WK.Libraries.SharpClipboardNS
 
             }
 
-            #endregion
         }
 
-        #endregion
 
-        #endregion
 
-        #region Private
 
         /// <summary>
-        /// This initiates a Timer that then begins the 
-        /// clipboard-monitoring service. The Timer will 
+        /// This initiates a Timer that then begins the
+        /// clipboard-monitoring service. The Timer will
         /// auto-shutdown once the service has started.
         /// </summary>
         private void OnLoad(object sender, EventArgs e)
@@ -420,13 +387,9 @@ namespace WK.Libraries.SharpClipboardNS
             }
         }
 
-        #endregion
 
-        #endregion
 
-        #region Smart Tags
 
-        #region Standard: Designer
 
         [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "FullTrust")]
         public class WKDesigner : ComponentDesigner
@@ -436,7 +399,8 @@ namespace WK.Libraries.SharpClipboardNS
             // Use pull model to populate smart tag menu.
             public override DesignerActionListCollection ActionLists
             {
-                get {
+                get
+                {
                     if (null == actionLists)
                     {
                         actionLists = new DesignerActionListCollection
@@ -450,9 +414,7 @@ namespace WK.Libraries.SharpClipboardNS
             }
         }
 
-        #endregion
 
-        #region Modifiers: Properties
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WKComponentActionList"/> class.
@@ -466,7 +428,7 @@ namespace WK.Libraries.SharpClipboardNS
             {
                 this.WKComponent = component as SharpClipboard;
 
-                // Cache a reference to DesignerActionUIService so 
+                // Cache a reference to DesignerActionUIService so
                 // that the DesignerActionList can be refreshed.
                 this.designerActionUISvc = GetService(typeof(DesignerActionUIService))
                                            as DesignerActionUIService;
@@ -476,7 +438,6 @@ namespace WK.Libraries.SharpClipboardNS
                 this.AutoShow = true;
             }
 
-            #region Properties Manager
 
             internal static PropertyDescriptor GetPropertyDescriptor(IComponent component, string propertyName)
             {
@@ -516,9 +477,7 @@ namespace WK.Libraries.SharpClipboardNS
                 }
             }
 
-            #endregion
 
-            #region Items Manager
 
             /// <summary>
             /// Implementation of this abstract method creates Smart Tag items,
@@ -541,25 +500,15 @@ namespace WK.Libraries.SharpClipboardNS
                 return items;
             }
 
-            #region Properties
 
             public bool MonitorClipboard
             {
                 get { return WKComponent.MonitorClipboard; }
                 set { SetValue(WKComponent, "MonitorClipboard", value); }
             }
-
-            #endregion
-
-            #endregion
         }
-
-        #endregion
-
-        #endregion
     }
 
-    #region Property Classes
 
     /// <summary>
     /// Provides a list of supported observable data formats
@@ -579,13 +528,10 @@ namespace WK.Libraries.SharpClipboardNS
             _all = true;
         }
 
-        #region Fields
 
         private bool _all;
 
-        #endregion
 
-        #region Properties
 
         /// <summary>
         /// Gets or sets a value indicating whether all the
@@ -598,7 +544,8 @@ namespace WK.Libraries.SharpClipboardNS
         public bool All
         {
             get { return _all; }
-            set {
+            set
+            {
 
                 _all = value;
 
@@ -632,7 +579,7 @@ namespace WK.Libraries.SharpClipboardNS
         public bool Images { get; set; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether other 
+        /// Gets or sets a value indicating whether other
         /// complex object-types will be monitored.
         /// </summary>
         [Category("#Clipboard: Behaviour")]
@@ -640,9 +587,7 @@ namespace WK.Libraries.SharpClipboardNS
                      "complex object-types will be monitored.")]
         public bool Others { get; set; } = true;
 
-        #endregion
 
-        #region Overrides
 
         /// <summary>
         /// Returns a <see cref="string"/> containing the list of observable data
@@ -653,9 +598,8 @@ namespace WK.Libraries.SharpClipboardNS
             return $"Texts: {Texts}; Images: {Images}; Files: {Files}; Others: {Others}";
         }
 
-        #endregion
     }
-    
+
     /// <summary>
     /// Stores details of the application from
     /// where the clipboard's content were copied.
@@ -681,13 +625,12 @@ namespace WK.Libraries.SharpClipboardNS
             Handle = handle;
         }
 
-        #region Properties
 
         /// <summary>
         /// Gets the application's process-ID.
         /// </summary>
         public int ID { get; }
-        
+
         /// <summary>
         /// Gets the appliation's window-handle.
         /// </summary>
@@ -708,12 +651,10 @@ namespace WK.Libraries.SharpClipboardNS
         /// </summary>
         public string Path { get; }
 
-        #endregion
 
-        #region Overrides
 
         /// <summary>
-        /// Returns a <see cref="string"/> containing the list 
+        /// Returns a <see cref="string"/> containing the list
         /// of application details provided.
         /// </summary>
         public override string ToString()
@@ -722,8 +663,6 @@ namespace WK.Libraries.SharpClipboardNS
                    $"Title: {Title}; Path: {Path}";
         }
 
-        #endregion
     }
 
-    #endregion
 }
