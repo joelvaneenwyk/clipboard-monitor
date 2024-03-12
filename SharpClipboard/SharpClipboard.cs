@@ -1,10 +1,10 @@
 ﻿/*
  * Developer    : Willy Kimura (WK).
- * Library      : SharpCliboard.
+ * Library      : SharpClipboard.
  * License      : MIT.
  *
  * This handy library was designed to assist .NET developers
- * monitor the system cliboard in an easier and pluggable
+ * monitor the system clipboard in an easier and pluggable
  * fashion that before. It provides support for detecting
  * data formats including texts, images & files. To use it
  * at design-time, simply add the component in the Toolbox
@@ -35,7 +35,7 @@ namespace WK.Libraries.SharpClipboardNS
     [DefaultProperty("MonitorClipboard")]
     [Description("Assists in anonymously monitoring the system clipboard by " +
                  "detecting any copied/cut data and the type of data it is.")]
-    public partial class SharpClipboard : Component
+    public sealed partial class SharpClipboard : Component
     {
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace WK.Libraries.SharpClipboardNS
         private bool _monitorClipboard;
         private bool _observeLastEntry;
 
-        private Timer _timer = new Timer();
+        private readonly Timer _timer = new Timer();
         private ClipboardHandle _handle = new ClipboardHandle();
         private ObservableDataFormats _observableFormats = new ObservableDataFormats();
 
@@ -174,7 +174,7 @@ namespace WK.Libraries.SharpClipboardNS
         [TypeConverter(typeof(StringConverter))]
         [Description("Sets the object that contains programmer-" +
                      "supplied data associated with the component.")]
-        public virtual object Tag { get; set; }
+        public object? Tag { get; set; }
 
 
 
@@ -182,32 +182,32 @@ namespace WK.Libraries.SharpClipboardNS
         /// Gets the currently cut/copied clipboard text.
         /// </summary>
         [Browsable(false)]
-        public string ClipboardText { get; internal set; }
+        public string? ClipboardText { get; internal set; }
 
         /// <summary>
         /// Gets the currently cut/copied clipboard <see cref="object"/>.
         /// This is necessary when handling complex content copied to the clipboard.
         /// </summary>
         [Browsable(false)]
-        public object ClipboardObject { get; internal set; }
+        public object? ClipboardObject { get; internal set; }
 
         /// <summary>
         /// Gets the currently cut/copied clipboard file-path.
         /// </summary>
         [Browsable(false)]
-        public string ClipboardFile { get; internal set; }
+        public string? ClipboardFile { get; internal set; }
 
         /// <summary>
         /// Gets the currently cut/copied clipboard file-paths.
         /// </summary>
         [Browsable(false)]
-        public List<string> ClipboardFiles { get; internal set; } = new List<string>();
+        public List<string?> ClipboardFiles { get; internal set; } = new List<string?>();
 
         /// <summary>
         /// Gets the currently cut/copied clipboard image.
         /// </summary>
         [Browsable(false)]
-        public Image ClipboardImage { get; internal set; }
+        public Image? ClipboardImage { get; internal set; }
 
         /// <summary>
         /// Lets you change the invisible clipboard-window-handle's title
@@ -272,7 +272,7 @@ namespace WK.Libraries.SharpClipboardNS
         /// </summary>
         /// <param name="content">The current clipboard content.</param>
         /// <param name="type">The current clipboard content-type.</param>
-        internal void Invoke(object content, ContentTypes type, SourceApplication source)
+        internal void Invoke(object? content, ContentTypes type, SourceApplication source)
         {
             ClipboardChanged?.Invoke(this, new ClipboardChangedEventArgs(content, type, source));
         }
@@ -331,7 +331,7 @@ namespace WK.Libraries.SharpClipboardNS
             /// </summary>
             /// <param name="content">The current clipboard content.</param>
             /// <param name="contentType">The current clipboard-content-type.</param>
-            public ClipboardChangedEventArgs(object content, ContentTypes contentType, SourceApplication source)
+            public ClipboardChangedEventArgs(object? content, ContentTypes contentType, SourceApplication source)
             {
                 Content = content;
                 ContentType = contentType;
@@ -349,7 +349,7 @@ namespace WK.Libraries.SharpClipboardNS
             /// <summary>
             /// Gets the currently copied clipboard content.
             /// </summary>
-            public object Content { get; }
+            public object? Content { get; }
 
             /// <summary>
             /// Gets the currently copied clipboard content-type.

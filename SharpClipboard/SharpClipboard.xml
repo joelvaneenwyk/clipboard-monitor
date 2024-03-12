@@ -73,8 +73,8 @@
         <member name="P:WK.Libraries.SharpClipboardNS.SharpClipboard.ObserveLastEntry">
             <summary>
             When set to true, the last cut/copied clipboard item will
-            not be auto-picked once monitoring is enabled. However when 
-            set to false, the last cut/copied clipboard item will be 
+            not be auto-picked once monitoring is enabled. However when
+            set to false, the last cut/copied clipboard item will be
             auto-picked once monitoring is enabled.
             </summary>
         </member>
@@ -118,9 +118,9 @@
         </member>
         <member name="P:WK.Libraries.SharpClipboardNS.SharpClipboard.HandleCaption">
             <summary>
-            Lets you change the invisible clipboard-window-handle's title 
-            that is designed to receive broadcasted clipboard messages. This is 
-            however unnecessary for normal users but may be essential if you're 
+            Lets you change the invisible clipboard-window-handle's title
+            that is designed to receive broadcasted clipboard messages. This is
+            however unnecessary for normal users but may be essential if you're
             working under special circumstances that require supervision.
             The window will however remain hidden from all users.
             </summary>
@@ -211,8 +211,8 @@
         </member>
         <member name="M:WK.Libraries.SharpClipboardNS.SharpClipboard.OnLoad(System.Object,System.EventArgs)">
             <summary>
-            This initiates a Timer that then begins the 
-            clipboard-monitoring service. The Timer will 
+            This initiates a Timer that then begins the
+            clipboard-monitoring service. The Timer will
             auto-shutdown once the service has started.
             </summary>
         </member>
@@ -278,7 +278,7 @@
         </member>
         <member name="P:WK.Libraries.SharpClipboardNS.ObservableDataFormats.Others">
             <summary>
-            Gets or sets a value indicating whether other 
+            Gets or sets a value indicating whether other
             complex object-types will be monitored.
             </summary>
         </member>
@@ -331,7 +331,7 @@
         </member>
         <member name="M:WK.Libraries.SharpClipboardNS.SourceApplication.ToString">
             <summary>
-            Returns a <see cref="T:System.String"/> containing the list 
+            Returns a <see cref="T:System.String"/> containing the list
             of application details provided.
             </summary>
         </member>

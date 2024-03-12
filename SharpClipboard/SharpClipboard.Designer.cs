@@ -1,6 +1,6 @@
 ﻿namespace WK.Libraries.SharpClipboardNS
 {
-    partial class SharpClipboard
+    sealed partial class SharpClipboard
     {
         /// <summary>
         /// Required designer variable.

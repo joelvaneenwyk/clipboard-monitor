@@ -153,7 +153,7 @@ namespace WK.Libraries.SharpClipboardNS.Views
                     // If clipboard-monitoring is enabled, proceed to listening.
                     if (Ready && SharpClipboardInstance.MonitorClipboard)
                     {
-                        IDataObject dataObj;
+                        IDataObject? dataObj;
                         int retryCount = 0;
 
                         while (true)
@@ -184,7 +184,7 @@ namespace WK.Libraries.SharpClipboardNS.Views
                             if ((SharpClipboardInstance.ObservableFormats.Files == true) &&
                                 (dataObj.GetDataPresent(DataFormats.FileDrop)))
                             {
-                                string[] capturedFiles = (string[])dataObj.GetData(DataFormats.FileDrop);
+                                string?[] capturedFiles = (string?[])dataObj.GetData(DataFormats.FileDrop);
 
                                 // If the 'capturedFiles' string array persists as null, then this means
                                 // that the copied content is of a complex object type since the file-drop
@@ -217,7 +217,7 @@ namespace WK.Libraries.SharpClipboardNS.Views
                             else if ((SharpClipboardInstance.ObservableFormats.Texts == true) &&
                                      (dataObj.GetDataPresent(DataFormats.Text) || dataObj.GetDataPresent(DataFormats.UnicodeText)))
                             {
-                                string capturedText = dataObj.GetData(DataFormats.UnicodeText).ToString();
+                                string? capturedText = dataObj.GetData(DataFormats.UnicodeText).ToString();
                                 SharpClipboardInstance.ClipboardText = capturedText;
 
                                 SharpClipboardInstance.Invoke(capturedText, SharpClipboard.ContentTypes.Text,
@@ -229,7 +229,7 @@ namespace WK.Libraries.SharpClipboardNS.Views
                             else if ((SharpClipboardInstance.ObservableFormats.Images == true) &&
                                      (dataObj.GetDataPresent(DataFormats.Bitmap)))
                             {
-                                Image capturedImage = dataObj.GetData(DataFormats.Bitmap) as Image;
+                                Image? capturedImage = dataObj.GetData(DataFormats.Bitmap) as Image;
                                 SharpClipboardInstance.ClipboardImage = capturedImage;
 
                                 SharpClipboardInstance.Invoke(capturedImage, SharpClipboard.ContentTypes.Image,

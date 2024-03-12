@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SharpClipboard.Tests.NetCoreWinForms
+namespace SharpClipboard.Tests.WinForms
 {
     static class Program
     {

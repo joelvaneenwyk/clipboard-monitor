@@ -1,6 +1,6 @@
 ﻿using WK.Libraries.SharpClipboardNS;
 
-namespace SharpClipboard.Tests.NetCoreWinForms
+namespace SharpClipboard.Tests.WinForms
 {
     partial class MainForm
     {
@@ -65,9 +65,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             ((System.ComponentModel.ISupportInitialize)(this.pbCopiedImage)).BeginInit();
             this.panel4.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // chkMonitorClipboard
-            // 
+            //
             this.chkMonitorClipboard.AutoSize = true;
             this.chkMonitorClipboard.Checked = true;
             this.chkMonitorClipboard.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -80,9 +80,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.chkMonitorClipboard.Text = "Monitor Clipboard";
             this.chkMonitorClipboard.UseVisualStyleBackColor = true;
             this.chkMonitorClipboard.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
+            //
             // lblTitle
-            // 
+            //
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 15.75F);
             this.lblTitle.ForeColor = System.Drawing.Color.DodgerBlue;
@@ -91,9 +91,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.lblTitle.Size = new System.Drawing.Size(155, 30);
             this.lblTitle.TabIndex = 3;
             this.lblTitle.Text = "SharpClipboard";
-            // 
+            //
             // panel1
-            // 
+            //
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Controls.Add(this.lblOptions);
             this.panel1.Controls.Add(this.grpLibrarySettings);
@@ -103,9 +103,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(312, 397);
             this.panel1.TabIndex = 4;
-            // 
+            //
             // lblOptions
-            // 
+            //
             this.lblOptions.AutoSize = true;
             this.lblOptions.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F);
             this.lblOptions.ForeColor = System.Drawing.Color.Black;
@@ -114,9 +114,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.lblOptions.Size = new System.Drawing.Size(89, 30);
             this.lblOptions.TabIndex = 6;
             this.lblOptions.Text = "Options";
-            // 
+            //
             // grpLibrarySettings
-            // 
+            //
             this.grpLibrarySettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -130,9 +130,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.grpLibrarySettings.TabIndex = 5;
             this.grpLibrarySettings.TabStop = false;
             this.grpLibrarySettings.Text = "Change library settings";
-            // 
+            //
             // grpObservableFormats
-            // 
+            //
             this.grpObservableFormats.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -150,9 +150,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.grpObservableFormats.TabIndex = 6;
             this.grpObservableFormats.TabStop = false;
             this.grpObservableFormats.Text = "Observable Formats";
-            // 
+            //
             // lblObservableFilesDesc
-            // 
+            //
             this.lblObservableFilesDesc.AutoSize = true;
             this.lblObservableFilesDesc.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
             this.lblObservableFilesDesc.ForeColor = System.Drawing.Color.Gray;
@@ -161,9 +161,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.lblObservableFilesDesc.Size = new System.Drawing.Size(176, 30);
             this.lblObservableFilesDesc.TabIndex = 11;
             this.lblObservableFilesDesc.Text = "Monitors any files/directories \r\nthat are copied to the clipboard.";
-            // 
+            //
             // chkObserveFiles
-            // 
+            //
             this.chkObserveFiles.AutoSize = true;
             this.chkObserveFiles.Checked = true;
             this.chkObserveFiles.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -176,9 +176,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.chkObserveFiles.Text = "Files";
             this.chkObserveFiles.UseVisualStyleBackColor = true;
             this.chkObserveFiles.CheckedChanged += new System.EventHandler(this.chkObserveFiles_CheckedChanged);
-            // 
+            //
             // lblObservableImagesDesc
-            // 
+            //
             this.lblObservableImagesDesc.AutoSize = true;
             this.lblObservableImagesDesc.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
             this.lblObservableImagesDesc.ForeColor = System.Drawing.Color.Gray;
@@ -187,9 +187,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.lblObservableImagesDesc.Size = new System.Drawing.Size(164, 30);
             this.lblObservableImagesDesc.TabIndex = 9;
             this.lblObservableImagesDesc.Text = "Monitors any images that are \r\ncopied to the clipboard.";
-            // 
+            //
             // chkObserveImages
-            // 
+            //
             this.chkObserveImages.AutoSize = true;
             this.chkObserveImages.Checked = true;
             this.chkObserveImages.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -202,9 +202,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.chkObserveImages.Text = "Images";
             this.chkObserveImages.UseVisualStyleBackColor = true;
             this.chkObserveImages.CheckedChanged += new System.EventHandler(this.chkObserveImages_CheckedChanged);
-            // 
+            //
             // lblObservableTextsDesc
-            // 
+            //
             this.lblObservableTextsDesc.AutoSize = true;
             this.lblObservableTextsDesc.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
             this.lblObservableTextsDesc.ForeColor = System.Drawing.Color.DimGray;
@@ -213,9 +213,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.lblObservableTextsDesc.Size = new System.Drawing.Size(151, 30);
             this.lblObservableTextsDesc.TabIndex = 7;
             this.lblObservableTextsDesc.Text = "Monitors any texts that are \r\ncopied to the clipboard.";
-            // 
+            //
             // chkObserveTexts
-            // 
+            //
             this.chkObserveTexts.AutoSize = true;
             this.chkObserveTexts.Checked = true;
             this.chkObserveTexts.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -228,9 +228,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.chkObserveTexts.Text = "Texts";
             this.chkObserveTexts.UseVisualStyleBackColor = true;
             this.chkObserveTexts.CheckedChanged += new System.EventHandler(this.chkObserveTexts_CheckedChanged);
-            // 
+            //
             // txtCopiedTexts
-            // 
+            //
             this.txtCopiedTexts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -240,9 +240,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.txtCopiedTexts.Name = "txtCopiedTexts";
             this.txtCopiedTexts.Size = new System.Drawing.Size(236, 314);
             this.txtCopiedTexts.TabIndex = 5;
-            // 
+            //
             // panel2
-            // 
+            //
             this.panel2.BackColor = System.Drawing.Color.Honeydew;
             this.panel2.Controls.Add(this.label1);
             this.panel2.Controls.Add(this.txtCopiedTexts);
@@ -252,9 +252,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(252, 397);
             this.panel2.TabIndex = 6;
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 15.75F);
             this.label1.ForeColor = System.Drawing.Color.Black;
@@ -263,9 +263,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.label1.Size = new System.Drawing.Size(130, 30);
             this.label1.TabIndex = 7;
             this.label1.Text = "Copied Texts";
-            // 
+            //
             // label2
-            // 
+            //
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
             this.label2.Location = new System.Drawing.Point(27, 43);
@@ -273,9 +273,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.label2.Size = new System.Drawing.Size(99, 15);
             this.label2.TabIndex = 8;
             this.label2.Text = "will appear here...";
-            // 
+            //
             // panel3
-            // 
+            //
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(234)))), ((int)(((byte)(234)))), ((int)(((byte)(255)))));
             this.panel3.Controls.Add(this.pbCopiedImage);
             this.panel3.Controls.Add(this.label3);
@@ -285,9 +285,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(252, 397);
             this.panel3.TabIndex = 7;
-            // 
+            //
             // pbCopiedImage
-            // 
+            //
             this.pbCopiedImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -299,9 +299,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.pbCopiedImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbCopiedImage.TabIndex = 9;
             this.pbCopiedImage.TabStop = false;
-            // 
+            //
             // label3
-            // 
+            //
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 15.75F);
             this.label3.ForeColor = System.Drawing.Color.Black;
@@ -310,9 +310,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.label3.Size = new System.Drawing.Size(163, 30);
             this.label3.TabIndex = 7;
             this.label3.Text = "Copied Image(s)";
-            // 
+            //
             // label4
-            // 
+            //
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
             this.label4.Location = new System.Drawing.Point(27, 43);
@@ -320,9 +320,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.label4.Size = new System.Drawing.Size(99, 15);
             this.label4.TabIndex = 8;
             this.label4.Text = "will appear here...";
-            // 
+            //
             // panel4
-            // 
+            //
             this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel4.BackColor = System.Drawing.Color.Ivory;
@@ -333,9 +333,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(252, 397);
             this.panel4.TabIndex = 8;
-            // 
+            //
             // lstCopiedFiles
-            // 
+            //
             this.lstCopiedFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
             | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -347,9 +347,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.lstCopiedFiles.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lstCopiedFiles.Size = new System.Drawing.Size(236, 314);
             this.lstCopiedFiles.TabIndex = 11;
-            // 
+            //
             // label5
-            // 
+            //
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 15.75F);
             this.label5.ForeColor = System.Drawing.Color.Black;
@@ -358,9 +358,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.label5.Size = new System.Drawing.Size(136, 30);
             this.label5.TabIndex = 7;
             this.label5.Text = "Copied File(s)";
-            // 
+            //
             // label6
-            // 
+            //
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold);
             this.label6.Location = new System.Drawing.Point(27, 43);
@@ -368,9 +368,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.label6.Size = new System.Drawing.Size(99, 15);
             this.label6.TabIndex = 8;
             this.label6.Text = "will appear here...";
-            // 
+            //
             // sharpClipboard1
-            // 
+            //
             this.sharpClipboard1.MonitorClipboard = true;
             this.sharpClipboard1.ObservableFormats.All = true;
             this.sharpClipboard1.ObservableFormats.Files = true;
@@ -381,9 +381,9 @@ namespace SharpClipboard.Tests.NetCoreWinForms
             this.sharpClipboard1.Tag = null;
             this.sharpClipboard1.ClipboardChanged += new System.EventHandler<WK.Libraries.SharpClipboardNS.SharpClipboard.ClipboardChangedEventArgs>(this.sharpClipboard1_ClipboardChanged);
             this.sharpClipboard1.MonitorClipboardChanged += new System.EventHandler<System.EventArgs>(this.sharpClipboard1_MonitorClipboardChanged);
-            // 
+            //
             // MainForm
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1068, 397);

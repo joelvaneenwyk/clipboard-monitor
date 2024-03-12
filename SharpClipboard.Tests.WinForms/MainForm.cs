@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Security.Principal;
 using System.Collections.Generic;
 
-namespace SharpClipboard.Tests.NetCoreWinForms
+namespace SharpClipboard.Tests.WinForms
 {
     public partial class MainForm : Form
     {
@@ -21,7 +21,7 @@ namespace SharpClipboard.Tests.NetCoreWinForms
 
         #region Fields
 
-        private static WK.Libraries.SharpClipboardNS.SharpClipboard clipboard = 
+        private static WK.Libraries.SharpClipboardNS.SharpClipboard clipboard =
             new WK.Libraries.SharpClipboardNS.SharpClipboard();
 
         #endregion
@@ -107,11 +107,11 @@ namespace SharpClipboard.Tests.NetCoreWinForms
                 txtCopiedTexts.Text = sharpClipboard1.ClipboardText.ToString();
             }
 
-            // If you wish to get details of the application from where 
-            // any text, file, image or other objects were cut/copied, 
+            // If you wish to get details of the application from where
+            // any text, file, image or other objects were cut/copied,
             // simply add a TextBox and uncomment the lines below.
             // --------------------------------------------------------
-            // textBox1.Text = 
+            // textBox1.Text =
             //     $"Name: {e.SourceApplication.Name} \n" +
             //     $"Title: {e.SourceApplication.Title} \n" +
             //     $"ID: {e.SourceApplication.ID} \n" +
