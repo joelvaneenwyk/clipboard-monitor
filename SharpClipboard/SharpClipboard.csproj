@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>WK.Libraries.SharpClipboardNS</RootNamespace>
     <TargetFrameworks>net8.0-windows</TargetFrameworks>
