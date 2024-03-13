@@ -22,7 +22,13 @@ jobs:
         run: cspell "**/*"
 
   build:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        dotnet: [8.0.x, 6.0.x]
+        os: [windows-latest]
+        config: [Debug, Release]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
@@ -30,13 +36,10 @@ jobs:
 
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 8.0.x
-
-      - name: Restore dependencies
-        run: dotnet restore
+          dotnet-version: ${{ matrix.dotnet }}
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build -c ${{ matrix.config }} --self-contained --verbosity normal
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
