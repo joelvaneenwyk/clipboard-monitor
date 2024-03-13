@@ -20,14 +20,15 @@
         <DefineConstants>DEBUG;TRACE</DefineConstants>
         <DebugType>full</DebugType>
         <Prefer32Bit>false</Prefer32Bit>
+        <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 
         <WarningLevel>9999</WarningLevel>
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
         <NoWarn>1701;1702;CA1051;CA2213;CA5392</NoWarn>
 
-        <OutputPath>$(ProjectRoot)/bin/$(Configuration)/</OutputPath>
-        <OutDir>$(ProjectRoot)/bin/$(Configuration)/</OutDir>
-        <BaseIntermediateOutputPath>$(ProjectRoot)/.build/$(MSBuildProjectName)/</BaseIntermediateOutputPath>
+        <OutputPath>$(ProjectRootPrefix)bin/$(Configuration)/</OutputPath>
+        <OutDir>$(OutputPath)/</OutDir>
+        <BaseIntermediateOutputPath>$(ProjectRootPrefix).build/$(MSBuildProjectName)/</BaseIntermediateOutputPath>
         <BaseOutputPath>$(BaseIntermediateOutputPath)</BaseOutputPath>
         <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(Configuration)/$(Platform)/</IntermediateOutputPath>
         <IntDir>$(BaseIntermediateOutputPath)$(Configuration)/$(Platform)/</IntDir>
@@ -41,5 +42,7 @@
         <AnalysisMode>recommended</AnalysisMode>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+
+        <GeneratedMSBuildEditorConfigFile>$(IntermediateOutputPath)/$(MSBuildProjectName).GeneratedMSBuildEditorConfig.editorconfig</GeneratedMSBuildEditorConfigFile>
     </PropertyGroup>
 </Project>
