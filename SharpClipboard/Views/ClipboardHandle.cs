@@ -21,7 +21,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using JetBrains.Annotations;
