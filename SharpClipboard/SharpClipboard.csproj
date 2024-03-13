@@ -36,13 +36,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AnalysisLevel>latest-all</AnalysisLevel>
     <DocumentationFile>$(OutputPath)/SharpClipboard.xml</DocumentationFile>
-    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net20' ">
-    <Reference Include="System.Design" />
-    <Reference Include="System.Drawing.Design" />
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Remove="obj/**" />
     <EmbeddedResource Remove="obj/**" />
