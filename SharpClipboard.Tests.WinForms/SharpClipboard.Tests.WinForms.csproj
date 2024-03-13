@@ -6,6 +6,6 @@
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpClipboard\SharpClipboard.csproj" />
+    <ProjectReference Include="../SharpClipboard/SharpClipboard.csproj" />
   </ItemGroup>
 </Project>
