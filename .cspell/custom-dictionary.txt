@@ -1,0 +1,9 @@
+# Custom Dictionary Words
+CHANGECBCHAIN
+DRAWCLIPBOARD
+hwnd
+jetbrains
+Kimura
+mscorlib
+shemas
+Subtags
