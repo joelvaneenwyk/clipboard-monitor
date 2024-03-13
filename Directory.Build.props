@@ -1,0 +1,34 @@
+<Project>
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">
+            $(MSBuildThisFileDirectory)</SolutionDir>
+        <Deterministic>true</Deterministic>
+
+        <!-- For non-SDK projects that import this file and then import Microsoft.Common.props,
+             tell Microsoft.Common.props not to import Directory.Build.props again. -->
+        <ImportDirectoryBuildProps>true</ImportDirectoryBuildProps>
+
+        <DebugSymbols>true</DebugSymbols>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <DebugType>full</DebugType>
+        <Prefer32Bit>false</Prefer32Bit>
+
+        <Configuration Condition="$(Configuration) == ''">Debug</Configuration>
+        <OutputPath>$(MSBuildProjectDirectory)/../bin/$(Configuration)/</OutputPath>
+        <OutDir>$(MSBuildProjectDirectory)/../bin/$(Configuration)/</OutDir>
+        <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/../.build/$(MSBuildProjectName)/</BaseIntermediateOutputPath>
+        <IntermediateOutputPath>$(BaseIntermediateOutputPath)$(Configuration)/$(Platform)/</IntermediateOutputPath>
+        <IntDir>$(BaseIntermediateOutputPath)$(Configuration)/$(Platform)/</IntDir>
+        <UseCommonOutputDirectory>false</UseCommonOutputDirectory>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+
+        <AnalysisMode>none</AnalysisMode>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+        <EnableNETAnalyzers>false</EnableNETAnalyzers>
+        <AnalysisMode>recommended</AnalysisMode>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+</Project>
