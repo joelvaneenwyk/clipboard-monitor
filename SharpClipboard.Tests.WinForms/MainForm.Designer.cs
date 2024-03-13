@@ -379,7 +379,7 @@ namespace SharpClipboard.Tests.WinForms
             this.sharpClipboard1.ObservableFormats.Texts = true;
             this.sharpClipboard1.ObserveLastEntry = true;
             this.sharpClipboard1.Tag = null;
-            this.sharpClipboard1.ClipboardChanged += new System.EventHandler<WK.Libraries.SharpClipboardNS.SharpClipboard.ClipboardChangedEventArgs>(this.sharpClipboard1_ClipboardChanged);
+            this.sharpClipboard1.ClipboardChanged += new System.EventHandler<WK.Libraries.SharpClipboardNS.ClipboardChangedEventArgs>(this.sharpClipboard1_ClipboardChanged);
             this.sharpClipboard1.MonitorClipboardChanged += new System.EventHandler<System.EventArgs>(this.sharpClipboard1_MonitorClipboardChanged);
             //
             // MainForm

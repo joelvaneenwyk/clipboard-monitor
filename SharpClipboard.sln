@@ -6,6 +6,26 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpClipboard", "SharpClip
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpClipboard.Tests.WinForms", "SharpClipboard.Tests.WinForms\SharpClipboard.Tests.WinForms.csproj", "{D73E5EB1-DC2F-46E2-A30D-D76ECF2C4A07}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Global", ".Global", "{08441EC0-2515-4E83-BAAD-6C359E647778}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		_config.yml = _config.yml
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{9D9C1DA2-2A1D-47B5-933E-DF23E866504D}"
+	ProjectSection(SolutionItems) = preProject
+		.github\FUNDING.yml = .github\FUNDING.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{AD9A07EB-24AA-4174-944B-C8B2D2EE3BAE}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -26,5 +46,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D4EE96B-783A-40A6-ACB6-75B1ABB152B6}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9D9C1DA2-2A1D-47B5-933E-DF23E866504D} = {08441EC0-2515-4E83-BAAD-6C359E647778}
+		{AD9A07EB-24AA-4174-944B-C8B2D2EE3BAE} = {9D9C1DA2-2A1D-47B5-933E-DF23E866504D}
 	EndGlobalSection
 EndGlobal

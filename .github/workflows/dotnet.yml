@@ -10,22 +10,40 @@ on:
     branches: [main, develop]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cspell
+        run: npm install -g cspell
+
+      - name: Run cspell
+        run: cspell "**/*"
+
   build:
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dotnet: [8.0.x, 6.0.x]
+        os: [windows-latest]
+        config: [Debug, Release]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
 
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: ${{ matrix.dotnet }}
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build -c ${{ matrix.config }} --no-restore --self-contained --verbosity normal
 
       - name: Test
         run: dotnet test --no-build --verbosity normal

@@ -6,6 +6,11 @@
     <Platforms>x64</Platforms>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpClipboard\SharpClipboard.csproj" />
+    <Compile Remove="obj/**" />
+    <EmbeddedResource Remove="obj/**" />
+    <None Remove="obj/**" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../SharpClipboard/SharpClipboard.csproj" />
   </ItemGroup>
 </Project>

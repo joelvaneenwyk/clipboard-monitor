@@ -1,6 +1,6 @@
 ﻿namespace WK.Libraries.SharpClipboardNS.Views
 {
-    partial class ClipboardHandle
+    sealed partial class ClipboardHandle
     {
         /// <summary>
         /// Required designer variable.

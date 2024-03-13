@@ -1,0 +1,8 @@
+actionlint = "~1.6"
+dotnet = "~6"
+task = "~3"
+
+[plugins]
+actionlint = "source:https://raw.githubusercontent.com/Phault/proto-toml-plugins/main/actionlint/plugin.toml"
+dotnet = "github:Phault/proto-dotnet-plugin"
+task = "source:https://raw.githubusercontent.com/Phault/proto-toml-plugins/main/task/plugin.toml"

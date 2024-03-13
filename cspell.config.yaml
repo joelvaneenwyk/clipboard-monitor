@@ -1,0 +1,14 @@
+version: "0.2"
+ignorePaths:
+  - "**/obj/**"
+  - "**/.vs/**"
+  - "**/bin/**"
+dictionaryDefinitions:
+  - name: custom-dictionary
+    path: ./.cspell/custom-dictionary.txt
+    addWords: true
+dictionaries:
+  - custom-dictionary
+words: []
+ignoreWords: []
+import: []
