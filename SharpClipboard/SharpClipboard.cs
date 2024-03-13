@@ -87,7 +87,7 @@ public class ClipboardChangedEventArgs : EventArgs
 /// detecting any copied/cut data and the type of data it is.
 /// </summary>
 [PublicAPI]
-[Designer(typeof(WKDesigner))]
+[Designer(typeof(SharpClipboardDesigner))]
 [DefaultEvent("ClipboardChanged")]
 [DefaultProperty("MonitorClipboard")]
 [Description("Assists in anonymously monitoring the system clipboard by " +
@@ -390,21 +390,23 @@ public sealed partial class SharpClipboard : Component
 /// <summary>
 /// Component designer for action lists.
 /// </summary>
-public class WKDesigner : ComponentDesigner
+public class SharpClipboardDesigner : ComponentDesigner
 {
     private readonly Lazy<DesignerActionListCollection> _actionLists;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="WKDesigner" /> class.
+    /// Initializes a new instance of the <see cref="SharpClipboardDesigner" /> class.
     /// </summary>
-    public WKDesigner()
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Style", "IDE0028:Simplify collection initialization", Justification = "<Pending>")]
+    public SharpClipboardDesigner()
     {
         _actionLists = new Lazy<DesignerActionListCollection>(
         () =>
         {
-            var lists = new DesignerActionListCollection
+            DesignerActionListCollection lists = new()
             {
-                new WKComponentActionList(Component)
+                new SharpClipboardComponentActionList(Component)
             };
             return lists;
         }, LazyThreadSafetyMode.ExecutionAndPublication);
@@ -420,24 +422,25 @@ public class WKDesigner : ComponentDesigner
 /// <summary>
 /// Custom action list for clipboard component.
 /// </summary>
-public class WKComponentActionList : DesignerActionList
+public sealed class SharpClipboardComponentActionList : DesignerActionList
 {
-    private readonly DesignerActionUIService? designerActionUISvc;
-    private readonly SharpClipboard? WKComponent;
+    [UsedImplicitly]
+    private readonly DesignerActionUIService? _designerActionService;
+    
+    private readonly SharpClipboard? _sharpClipboardComponent;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="WKComponentActionList" /> class.
+    /// Initializes a new instance of the <see cref="SharpClipboardComponentActionList" /> class.
     /// </summary>
     /// <param name="component"></param>
     [SupportedOSPlatform("windows")]
-    public WKComponentActionList(IComponent component) : base(component)
+    public SharpClipboardComponentActionList(IComponent component) : base(component)
     {
-        WKComponent = component as SharpClipboard;
+        _sharpClipboardComponent = component as SharpClipboard;
 
         // Cache a reference to DesignerActionUIService so
         // that the DesignerActionList can be refreshed.
-        designerActionUISvc = GetService(typeof(DesignerActionUIService))
-            as DesignerActionUIService;
+        _designerActionService = GetService(typeof(DesignerActionUIService)) as DesignerActionUIService;
 
         // Automatically display Smart Tags for quick access
         // to the most common properties needed by users.
@@ -450,8 +453,8 @@ public class WKComponentActionList : DesignerActionList
     [PublicAPI]
     public bool MonitorClipboard
     {
-        get => WKComponent?.MonitorClipboard ?? false;
-        set => SetValue(WKComponent, nameof(MonitorClipboard), value);
+        get => _sharpClipboardComponent?.MonitorClipboard ?? false;
+        set => SetValue(_sharpClipboardComponent, nameof(MonitorClipboard), value);
     }
 
     private static PropertyDescriptor? GetPropertyDescriptor(IComponent? component, string propertyName)
@@ -502,12 +505,9 @@ public class WKComponentActionList : DesignerActionList
         "Style", "IDE0028:Simplify collection initialization", Justification = "<Pending>")]
     public override DesignerActionItemCollection GetSortedActionItems()
     {
-        var propertyDescriptor = GetPropertyDescriptor(
-                        Component,
-                        nameof(MonitorClipboard)
-                    );
+        PropertyDescriptor? propertyDescriptor = GetPropertyDescriptor(Component, nameof(MonitorClipboard));
         string actionPropertyName = propertyDescriptor?.Description ?? string.Empty;
-        var result = new DesignerActionItemCollection();
+        DesignerActionItemCollection result = new();
         result.Add(new DesignerActionHeaderItem(nameof(Behavior)));
         result.Add(new DesignerActionPropertyItem(
                     nameof(MonitorClipboard),
@@ -605,12 +605,12 @@ public class ObservableDataFormats
 /// where the clipboard's content were copied.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
-public class SourceApplication
+public sealed class SourceApplication
 {
     /// <summary>
     /// Creates a new <see cref="SourceApplication" /> class-instance.
     /// </summary>
-    /// <param name="id">The application's ID.</param>
+    /// <param name="id">The application's Id.</param>
     /// <param name="handle">The application's handle.</param>
     /// <param name="name">The application's name.</param>
     /// <param name="title">The application's title.</param>
@@ -619,7 +619,7 @@ public class SourceApplication
         int id, IntPtr handle,
         string? name, string? title, string? path)
     {
-        ID = id;
+        Id = id;
         Name = name;
         Path = path;
         Title = title;
@@ -627,33 +627,38 @@ public class SourceApplication
     }
 
     internal SourceApplication(SourceApplication? source)
-        : this(source?.ID ?? 0, source?.Handle ?? IntPtr.Zero, source?.Name, source?.Title, source?.Path)
+        : this(source?.Id ?? 0, source?.Handle ?? IntPtr.Zero, source?.Name, source?.Title, source?.Path)
     {
     }
 
     /// <summary>
-    /// Gets the application's process-ID.
+    /// Gets the application's process-Id.
     /// </summary>
-    public readonly int ID;
+    [PublicAPI]
+    public readonly int Id;
 
     /// <summary>
     /// Gets the application's window-handle.
     /// </summary>
+    [PublicAPI]
     public readonly IntPtr Handle;
 
     /// <summary>
     /// Gets the application's name.
     /// </summary>
+    [PublicAPI]
     public readonly string? Name;
 
     /// <summary>
     /// Gets the application's title-text.
     /// </summary>
+    [PublicAPI]
     public readonly string? Title;
 
     /// <summary>
     /// Gets the application's absolute path.
     /// </summary>
+    [PublicAPI]
     public readonly string? Path;
 
     /// <summary>
@@ -662,7 +667,7 @@ public class SourceApplication
     /// </summary>
     public override string ToString()
     {
-        return $"ID: {ID}; Handle: {Handle}, Name: {Name}; " +
+        return $"Id: {Id}; Handle: {Handle}, Name: {Name}; " +
                $"Title: {Title}; Path: {Path}";
     }
 }

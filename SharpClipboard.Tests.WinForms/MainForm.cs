@@ -97,7 +97,7 @@ public partial class MainForm : Form
         // textBox1.Text =
         //     $"Name: {e.SourceApplication.Name} \n" +
         //     $"Title: {e.SourceApplication.Title} \n" +
-        //     $"ID: {e.SourceApplication.ID} \n" +
+        //     $"Id: {e.SourceApplication.Id} \n" +
         //     $"Handle: {e.SourceApplication.Handle} \n" +
         //     $"Path: {e.SourceApplication.Path}";
         // --------------------------------------------------------
