@@ -68,6 +68,7 @@ public sealed partial class SharpClipboard : Component
 
     private readonly Lazy<ClipboardHandle> _handle;
 
+    [SupportedOSPlatform("windows6.0")]
     private readonly Timer _timer = new();
 
     private bool _monitorClipboard;
@@ -81,6 +82,7 @@ public sealed partial class SharpClipboard : Component
     /// <param name="container">
     /// The container hosting the component.
     /// </param>
+    [SupportedOSPlatform("windows6.0")]
     public SharpClipboard(IContainer? container = null)
     {
         _handle = new Lazy<ClipboardHandle>(
@@ -188,7 +190,7 @@ public sealed partial class SharpClipboard : Component
     /// </summary>
     [PublicAPI]
     [Browsable(false)]
-    public List<string?> ClipboardFiles { get; internal set; } = new();
+    public List<string?> ClipboardFiles { get; internal set; } = [];
 
     /// <summary>
     /// Gets the currently cut/copied clipboard image.
@@ -222,6 +224,7 @@ public sealed partial class SharpClipboard : Component
     /// initializes the system clipboard-access handle.
     /// </summary>
     [PublicAPI]
+    [SupportedOSPlatform("windows6.0")]
     public void StartMonitoring()
     {
         _handle.Value.Show();
@@ -232,6 +235,7 @@ public sealed partial class SharpClipboard : Component
     /// shuts the system clipboard-access handle.
     /// </summary>
     [PublicAPI]
+    [SupportedOSPlatform("windows6.0")]
     public void StopMonitoring()
     {
         _handle.Value.Close();
@@ -240,6 +244,7 @@ public sealed partial class SharpClipboard : Component
     /// <summary>
     /// Apply library-default settings and launch code.
     /// </summary>
+    [SupportedOSPlatform("windows6.0")]
     private void SetDefaults()
     {
         _timer.Enabled = true;
@@ -258,7 +263,7 @@ public sealed partial class SharpClipboard : Component
     /// <param name="source"></param>
     internal void Invoke(object? content, ContentTypes type, SourceApplication source)
     {
-        ClipboardChanged(this, ClipboardChangedEventArgs.CreateInstance(content, type, source));
+        ClipboardChanged?.Invoke(this, ClipboardChangedEventArgs.CreateInstance(content, type, source));
     }
 
     /// <summary>
@@ -302,7 +307,8 @@ public sealed partial class SharpClipboard : Component
     /// clipboard-monitoring service. The Timer will
     /// auto-shutdown once the service has started.
     /// </summary>
-    private void OnLoad(object sender, EventArgs e)
+    [SupportedOSPlatform("windows6.0")]
+    private void OnLoad(object? sender, EventArgs e)
     {
         if (!DesignMode)
         {
@@ -352,7 +358,7 @@ public sealed partial class SharpClipboard : Component
         public SourceApplication SourceApplication { get; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="ClipboardChangedEventArgs" />.     
+        /// Creates a new instance of <see cref="ClipboardChangedEventArgs" />.
         /// </summary>
         /// <param name="content"></param>
         /// <param name="contentType"></param>
@@ -413,11 +419,14 @@ public sealed partial class SharpClipboard : Component
             AutoShow = true;
         }
 
+        /// <summary>
+        /// Property tracking whether or not the clipboard is monitored.
+        /// </summary>
         [PublicAPI]
         public bool MonitorClipboard
         {
             get => WKComponent?.MonitorClipboard ?? false;
-            set => SetValue(WKComponent, "MonitorClipboard", value);
+            set => SetValue(WKComponent, nameof(MonitorClipboard), value);
         }
 
         private static PropertyDescriptor? GetPropertyDescriptor(IComponent? component, string propertyName)
@@ -576,8 +585,9 @@ public class SourceApplication
     /// <param name="name">The application's name.</param>
     /// <param name="title">The application's title.</param>
     /// <param name="path">The application's path.</param>
-    internal SourceApplication(int id, IntPtr handle, string name,
-        string title, string path)
+    internal SourceApplication(
+        int id, IntPtr handle,
+        string? name, string? title, string? path)
     {
         ID = id;
         Name = name;
@@ -589,27 +599,27 @@ public class SourceApplication
     /// <summary>
     /// Gets the application's process-ID.
     /// </summary>
-    public int ID { get; }
+    public readonly int ID;
 
     /// <summary>
-    /// Gets the appliation's window-handle.
+    /// Gets the application's window-handle.
     /// </summary>
-    public IntPtr Handle { get; }
+    public readonly IntPtr Handle;
 
     /// <summary>
     /// Gets the application's name.
     /// </summary>
-    public string Name { get; }
+    public readonly string? Name;
 
     /// <summary>
     /// Gets the application's title-text.
     /// </summary>
-    public string Title { get; }
+    public readonly string? Title;
 
     /// <summary>
     /// Gets the application's absolute path.
     /// </summary>
-    public string Path { get; }
+    public readonly string? Path;
 
     /// <summary>
     /// Returns a <see cref="string" /> containing the list
