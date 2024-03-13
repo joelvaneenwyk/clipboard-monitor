@@ -239,38 +239,38 @@
             the contents of this method with the code editor.
             </summary>
         </member>
-        <member name="T:WK.Libraries.SharpClipboardNS.WKDesigner">
+        <member name="T:WK.Libraries.SharpClipboardNS.SharpClipboardDesigner">
             <summary>
             Component designer for action lists.
             </summary>
         </member>
-        <member name="M:WK.Libraries.SharpClipboardNS.WKDesigner.#ctor">
+        <member name="M:WK.Libraries.SharpClipboardNS.SharpClipboardDesigner.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:WK.Libraries.SharpClipboardNS.WKDesigner" /> class.
+            Initializes a new instance of the <see cref="T:WK.Libraries.SharpClipboardNS.SharpClipboardDesigner" /> class.
             </summary>
         </member>
-        <member name="P:WK.Libraries.SharpClipboardNS.WKDesigner.ActionLists">
+        <member name="P:WK.Libraries.SharpClipboardNS.SharpClipboardDesigner.ActionLists">
             <summary>
             Use pull model to populate smart tag menu.
             </summary>
         </member>
-        <member name="T:WK.Libraries.SharpClipboardNS.WKComponentActionList">
+        <member name="T:WK.Libraries.SharpClipboardNS.SharpClipboardComponentActionList">
             <summary>
             Custom action list for clipboard component.
             </summary>
         </member>
-        <member name="M:WK.Libraries.SharpClipboardNS.WKComponentActionList.#ctor(System.ComponentModel.IComponent)">
+        <member name="M:WK.Libraries.SharpClipboardNS.SharpClipboardComponentActionList.#ctor(System.ComponentModel.IComponent)">
             <summary>
-            Initializes a new instance of the <see cref="T:WK.Libraries.SharpClipboardNS.WKComponentActionList" /> class.
+            Initializes a new instance of the <see cref="T:WK.Libraries.SharpClipboardNS.SharpClipboardComponentActionList" /> class.
             </summary>
             <param name="component"></param>
         </member>
-        <member name="P:WK.Libraries.SharpClipboardNS.WKComponentActionList.MonitorClipboard">
+        <member name="P:WK.Libraries.SharpClipboardNS.SharpClipboardComponentActionList.MonitorClipboard">
             <summary>
             Property tracking whether or not the clipboard is monitored.
             </summary>
         </member>
-        <member name="M:WK.Libraries.SharpClipboardNS.WKComponentActionList.GetSortedActionItems">
+        <member name="M:WK.Libraries.SharpClipboardNS.SharpClipboardComponentActionList.GetSortedActionItems">
             <summary>
             Implementation of this abstract method creates Smart Tag items,
             associates their targets, and collects them into a list.
@@ -330,15 +330,15 @@
             <summary>
             Creates a new <see cref="T:WK.Libraries.SharpClipboardNS.SourceApplication" /> class-instance.
             </summary>
-            <param name="id">The application's ID.</param>
+            <param name="id">The application's Id.</param>
             <param name="handle">The application's handle.</param>
             <param name="name">The application's name.</param>
             <param name="title">The application's title.</param>
             <param name="path">The application's path.</param>
         </member>
-        <member name="F:WK.Libraries.SharpClipboardNS.SourceApplication.ID">
+        <member name="F:WK.Libraries.SharpClipboardNS.SourceApplication.Id">
             <summary>
-            Gets the application's process-ID.
+            Gets the application's process-Id.
             </summary>
         </member>
         <member name="F:WK.Libraries.SharpClipboardNS.SourceApplication.Handle">
