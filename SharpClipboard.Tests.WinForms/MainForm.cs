@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using JetBrains.Annotations;
 
 namespace SharpClipboard.Tests.WinForms;
 
 public partial class MainForm : Form
 {
-    [UsedImplicitly]
-    private static readonly WK.Libraries.SharpClipboardNS.SharpClipboard Clipboard = new();
-
     public MainForm()
     {
         InitializeComponent();
@@ -43,7 +39,7 @@ public partial class MainForm : Form
     }
 
     private void sharpClipboard1_ClipboardChanged(object sender,
-        WK.Libraries.SharpClipboardNS.SharpClipboard.ClipboardChangedEventArgs e)
+        WK.Libraries.SharpClipboardNS.ClipboardChangedEventArgs e)
     {
         if (e.ContentType == WK.Libraries.SharpClipboardNS.SharpClipboard.ContentTypes.Text)
         {
@@ -69,7 +65,7 @@ public partial class MainForm : Form
             // Add all copied files to the declared variable.
             foreach (string file in sharpClipboard1.ClipboardFiles) files.Add(Path.GetFileName(file));
 
-            Debug.WriteLine(sharpClipboard1.ClipboardFiles.ToArray());
+            Debug.WriteLine(sharpClipboard1.ClipboardFiles);
 
             // Add all copied files to the files ListBox.
             lstCopiedFiles.Items.Clear();
