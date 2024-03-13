@@ -44,6 +44,11 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="obj/**" />
+    <EmbeddedResource Remove="obj/**" />
+    <None Remove="obj/**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="../Assets/clipboard.png" Pack="true" PackagePath="" Link="Assets/clipboard.png" />
     <Resource Include="../README.md" Link="README.md">
     </Resource>
