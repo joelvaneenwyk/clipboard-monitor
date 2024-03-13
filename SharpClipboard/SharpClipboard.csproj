@@ -13,7 +13,9 @@
     <PackageProjectUrl>https://github.com/joelvaneenwyk/SharpClipboard</PackageProjectUrl>
     <PackageIconUrl>
     </PackageIconUrl>
-    <Description>SharpClipboard is a clipboard-monitoring library for .NET that listens to the system's clipboard entries, allowing developers to tap into the rich capabilities of determining the clipboard's contents at runtime.</Description>
+    <Description>SharpClipboard is a clipboard-monitoring library for .NET that listens to the
+      system's clipboard entries, allowing developers to tap into the rich capabilities of
+      determining the clipboard's contents at runtime.</Description>
     <PackageReleaseNotes>
       - The 'ClipboardFiles' property will now be cleared upon copying files.
       - Prevented crashing when performing a clipboard operation in Remote Desktop environments.
@@ -28,28 +30,13 @@
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <SignAssembly>False</SignAssembly>
-    <Title>SharpClipboard</Title>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Title>$(AssemblyName)</Title>
     <NeutralLanguage>en</NeutralLanguage>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AnalysisLevel>latest-all</AnalysisLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DocumentationFile>SharpClipboard.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <DocumentationFile>SharpClipboard.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows|x64'">
-    <WarningLevel>9999</WarningLevel>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <NoWarn>1701;1702;CA1051;CA2213;CA5392</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows|x64'">
-    <WarningLevel>9999</WarningLevel>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <NoWarn>1701;1702;CA1051;CA2213;CA5392</NoWarn>
+    <DocumentationFile>$(OutputPath)/SharpClipboard.xml</DocumentationFile>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net20' ">
     <Reference Include="System.Design" />
@@ -58,10 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="../Assets/clipboard.png" Pack="true" PackagePath="" Link="Assets/clipboard.png" />
-    <None Include="../README.md">
-      <Pack>True</Pack>
-      <PackagePath>/</PackagePath>
-    </None>
+    <Resource Include="../README.md" Link="README.md">
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties/Resources.Designer.cs">

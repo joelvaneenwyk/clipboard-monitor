@@ -100,7 +100,7 @@ To manually parse the content after a cut/copy has been detected, you can use th
 
         // or files...
         List<string> files = (List<string>)e.Content;
-		
+        
         // or other complex types too.
         // Person p = JsonConvert.DeserializeObject<Person>(e.Content);
     }
