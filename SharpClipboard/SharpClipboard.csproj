@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>WK.Libraries.SharpClipboardNS</RootNamespace>
+    <RootNamespace>Mycoshiro.Windows.Forms</RootNamespace>
     <TargetFrameworks>net8.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
@@ -30,12 +30,20 @@
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <SignAssembly>False</SignAssembly>
-    <Title>$(AssemblyName)</Title>
+    <Title>Mycoshiro </Title>
     <NeutralLanguage>en</NeutralLanguage>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AnalysisLevel>latest-all</AnalysisLevel>
-    <DocumentationFile>$(OutputPath)/SharpClipboard.xml</DocumentationFile>
+    <DocumentationFile>$(ProjectRootPrefix)SharpClipboard.xml</DocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageId>Mycoshiro.Windows.Forms.SharpClipboard</PackageId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows|x64'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows|x64'">
+    <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="obj/**" />
@@ -44,6 +52,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="../Assets/clipboard.png" Pack="true" PackagePath="" Link="Assets/clipboard.png" />
+    <None Include="../README.md">
+      <Pack>True</Pack>
+      <PackagePath>/</PackagePath>
+    </None>
     <Resource Include="../README.md" Link="README.md">
     </Resource>
   </ItemGroup>

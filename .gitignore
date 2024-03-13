@@ -4,6 +4,9 @@
 .build/
 SharpClipboard*/SharpClipboard*.xml
 
+# These are sometimes generated if there is a conflict
+SharpClipboard*Backup*.csproj
+
 # User-specific files
 *.suo
 *.user

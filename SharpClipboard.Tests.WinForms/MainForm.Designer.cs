@@ -1,4 +1,4 @@
-﻿using WK.Libraries.SharpClipboardNS;
+﻿using Mycoshiro.Windows.Forms;
 
 namespace SharpClipboard.Tests.WinForms
 {
@@ -56,7 +56,7 @@ namespace SharpClipboard.Tests.WinForms
             this.lstCopiedFiles = new System.Windows.Forms.ListBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.sharpClipboard1 = new WK.Libraries.SharpClipboardNS.SharpClipboard(this.components);
+            this.sharpClipboard1 = new Mycoshiro.Windows.Forms.SharpClipboard(this.components);
             this.panel1.SuspendLayout();
             this.grpLibrarySettings.SuspendLayout();
             this.grpObservableFormats.SuspendLayout();
@@ -379,7 +379,7 @@ namespace SharpClipboard.Tests.WinForms
             this.sharpClipboard1.ObservableFormats.Texts = true;
             this.sharpClipboard1.ObserveLastEntry = true;
             this.sharpClipboard1.Tag = null;
-            this.sharpClipboard1.ClipboardChanged += new System.EventHandler<WK.Libraries.SharpClipboardNS.ClipboardChangedEventArgs>(this.sharpClipboard1_ClipboardChanged);
+            this.sharpClipboard1.ClipboardChanged += new System.EventHandler<Mycoshiro.Windows.Forms.ClipboardChangedEventArgs>(this.sharpClipboard1_ClipboardChanged);
             this.sharpClipboard1.MonitorClipboardChanged += new System.EventHandler<System.EventArgs>(this.sharpClipboard1_MonitorClipboardChanged);
             //
             // MainForm
@@ -412,7 +412,7 @@ namespace SharpClipboard.Tests.WinForms
         }
 
         #endregion
-        private WK.Libraries.SharpClipboardNS.SharpClipboard sharpClipboard1;
+        private Mycoshiro.Windows.Forms.SharpClipboard sharpClipboard1;
         private System.Windows.Forms.CheckBox chkMonitorClipboard;
         private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Panel panel1;

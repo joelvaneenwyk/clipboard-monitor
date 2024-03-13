@@ -25,11 +25,11 @@ using System.Runtime.Versioning;
 using System.Threading;
 using System.Windows.Forms.Design.Behavior;
 using JetBrains.Annotations;
-using WK.Libraries.SharpClipboardNS.Views;
-using static WK.Libraries.SharpClipboardNS.SharpClipboard;
+using Mycoshiro.Windows.Forms.Views;
+using static Mycoshiro.Windows.Forms.SharpClipboard;
 using Timer = System.Windows.Forms.Timer;
 
-namespace WK.Libraries.SharpClipboardNS;
+namespace Mycoshiro.Windows.Forms;
 
 /// <summary>
 /// Provides data for the <see cref="SharpClipboard.ClipboardChanged" /> event.
@@ -426,7 +426,7 @@ public sealed class SharpClipboardComponentActionList : DesignerActionList
 {
     [UsedImplicitly]
     private readonly DesignerActionUIService? _designerActionService;
-    
+
     private readonly SharpClipboard? _sharpClipboardComponent;
 
     /// <summary>

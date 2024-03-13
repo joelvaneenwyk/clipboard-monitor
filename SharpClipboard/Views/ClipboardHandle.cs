@@ -25,7 +25,7 @@ using System.Threading;
 using System.Windows.Forms;
 using JetBrains.Annotations;
 
-namespace WK.Libraries.SharpClipboardNS.Views;
+namespace Mycoshiro.Windows.Forms.Views;
 
 /// <summary>
 /// This window acts as a handle to the clipboard-monitoring process and
