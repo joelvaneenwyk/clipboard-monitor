@@ -91,7 +91,7 @@ public sealed partial class ClipboardHandle : Form
     }
 
     /// <summary>
-    /// Modifications in this overriden method have
+    /// Modifications in this overridden method have
     /// been added to disable viewing of the handle-
     /// window in the Task Manager.
     /// </summary>

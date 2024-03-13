@@ -1,9 +1,25 @@
 # Custom Dictionary Words
 CHANGECBCHAIN
 DRAWCLIPBOARD
+finalizer
 hwnd
 jetbrains
 Kimura
+lpdw
 mscorlib
 shemas
 Subtags
+TOOLWINDOW
+Localizable
+Segoe
+Argb
+resheader
+resmimetype
+resx
+bytearray
+depersist
+msdata
+Browsable
+Behaviour
+snupkg
+cref
