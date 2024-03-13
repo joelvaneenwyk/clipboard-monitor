@@ -10,6 +10,17 @@ on:
     branches: [main, develop]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cspell
+        run: npm install -g cspell
+
+      - name: Run cspell
+        run: cspell "**/*"
+
   build:
     runs-on: windows-latest
 
