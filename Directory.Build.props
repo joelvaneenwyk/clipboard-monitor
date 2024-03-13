@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
 
-        <ProjectRoot>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)))</ProjectRoot>
+        <ProjectRoot Condition="Exists('$(MSBuildProjectDirectory)/SharpClipboard.sln')">$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)))</ProjectRoot>
         <ProjectRoot Condition="Exists('$(MSBuildProjectDirectory)/../SharpClipboard.sln')">$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../'))</ProjectRoot>
 
         <ProjectRootPrefix Condition="HasTrailingSlash('$(ProjectRoot)')">$(ProjectRoot)</ProjectRootPrefix>

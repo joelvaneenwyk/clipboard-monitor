@@ -1,4 +1,6 @@
-# Custom Dictionary Words
+#
+# SharpClipboard: Dictionary
+#
 Argb
 astextplain
 Behaviour
@@ -10,6 +12,7 @@ CHANGECBCHAIN
 checkin
 codegen
 codeql
+Mycoshiro
 cref
 csdef
 dbmdl

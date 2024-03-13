@@ -35,7 +35,7 @@
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <AnalysisLevel>latest-all</AnalysisLevel>
-    <DocumentationFile>$(ProjectRootPrefix)SharpClipboard.xml</DocumentationFile>
+    <DocumentationFile>$(OutputPath)SharpClipboard.xml</DocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageId>Mycoshiro.Windows.Forms.SharpClipboard</PackageId>
   </PropertyGroup>
