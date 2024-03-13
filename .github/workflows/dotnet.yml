@@ -43,7 +43,7 @@ jobs:
         run: dotnet restore
 
       - name: Build
-        run: dotnet build -c ${{ matrix.config }} --no-restore --self-contained --verbosity normal
+        run: dotnet build -c ${{ matrix.config }} --no-restore--self-contained --verbosity normal
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
