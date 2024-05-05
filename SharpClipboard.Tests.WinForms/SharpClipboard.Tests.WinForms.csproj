@@ -4,10 +4,14 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x64</Platforms>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="bin\**" />
     <Compile Remove="obj/**" />
+    <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="obj/**" />
+    <None Remove="bin\**" />
     <None Remove="obj/**" />
   </ItemGroup>
   <ItemGroup>

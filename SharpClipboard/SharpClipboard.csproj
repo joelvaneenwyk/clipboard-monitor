@@ -46,8 +46,11 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="bin\**" />
     <Compile Remove="obj/**" />
+    <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="obj/**" />
+    <None Remove="bin\**" />
     <None Remove="obj/**" />
   </ItemGroup>
   <ItemGroup>
@@ -74,9 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets/" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
