@@ -123,14 +123,17 @@ public sealed partial class ClipboardHandle : Form
     }
 
     [LibraryImport("user32.dll")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static partial IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
 
     [LibraryImport("user32.dll")]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
 
-    [LibraryImport("user32.dll")]
-    private static partial int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+    [LibraryImport("user32.dll", EntryPoint = "SendMessageW", SetLastError = true)]
+    [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+    private static partial nint SendMessage(nint hWnd, int msg, nint wParam, nint lParam);
 
     /// <summary>
     /// This is the main clipboard detection method.
