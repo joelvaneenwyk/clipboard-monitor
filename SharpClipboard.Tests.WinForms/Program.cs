@@ -4,6 +4,9 @@ using JetBrains.Annotations;
 
 namespace SharpClipboard.Tests.WinForms
 {
+    /// <summary>
+    /// Default program class.
+    /// </summary>
     public static class Program
     {
         /// <summary>

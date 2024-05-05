@@ -1,13 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace SharpClipboard.Tests.WinForms;
 
+/// <summary>
+/// Main form used for testing the SharpClipboard library.      
+/// </summary>
 public partial class MainForm : Form
 {
+    /// <summary>
+    /// Initialize new instance of the main form.
+    /// </summary>
     public MainForm()
     {
         InitializeComponent();
@@ -60,16 +66,14 @@ public partial class MainForm : Form
         else if (e.ContentType == Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Files)
         {
             // Declare variable to add the list of copied files.
-            var files = new List<string>();
 
             // Add all copied files to the declared variable.
-            foreach (string file in sharpClipboard1.ClipboardFiles) files.Add(Path.GetFileName(file));
 
             Debug.WriteLine(sharpClipboard1.ClipboardFiles);
 
             // Add all copied files to the files ListBox.
             lstCopiedFiles.Items.Clear();
-            lstCopiedFiles.Items.AddRange(files.ToArray());
+            lstCopiedFiles.Items.AddRange(sharpClipboard1.ClipboardFiles.Select(Path.GetFileName) as object[] ?? []);
 
             // Alternatively, you can use:
             // ---------------------------

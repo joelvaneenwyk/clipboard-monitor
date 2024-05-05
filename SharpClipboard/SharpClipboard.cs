@@ -503,19 +503,16 @@ public sealed class SharpClipboardComponentActionList : DesignerActionList
     [SupportedOSPlatform("windows")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Style", "IDE0028:Simplify collection initialization", Justification = "<Pending>")]
-    public override DesignerActionItemCollection GetSortedActionItems()
-    {
-        PropertyDescriptor? propertyDescriptor = GetPropertyDescriptor(Component, nameof(MonitorClipboard));
-        string actionPropertyName = propertyDescriptor?.Description ?? string.Empty;
-        DesignerActionItemCollection result = new();
-        result.Add(new DesignerActionHeaderItem(nameof(Behavior)));
-        result.Add(new DesignerActionPropertyItem(
-                    nameof(MonitorClipboard),
-                    "Monitor Clipboard",
-                    nameof(Behavior),
-                    actionPropertyName));
-        return result;
-    }
+    public override DesignerActionItemCollection GetSortedActionItems() =>
+        [
+            new DesignerActionHeaderItem(nameof(Behavior)),
+            new DesignerActionPropertyItem(
+                nameof(MonitorClipboard),
+                "Monitor Clipboard",
+                nameof(Behavior),
+                GetPropertyDescriptor(Component, nameof(MonitorClipboard))?.Description ?? string.Empty)
+
+        ];
 }
 
 /// <summary>
@@ -668,149 +665,6 @@ public sealed class SourceApplication
     public override string ToString()
     {
         return $"Id: {Id}; Handle: {Handle}, Name: {Name}; " +
-               $"Title: {Title}; Path: {Path}";
-    }
-}
-
-/// <summary>
-/// Provides a list of supported observable data formats
-/// that can be monitored from the system clipboard.
-/// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
-[TypeConverter(typeof(ExpandableObjectConverter))]
-[Description("Provides a list of supported observable data formats " +
-             "that can be monitored from the system clipboard.")]
-public class ObservableDataFormats
-{
-    private bool _all;
-
-    /// <summary>
-    /// Creates a new <see cref="ObservableDataFormats" /> options class-instance.
-    /// </summary>
-    public ObservableDataFormats()
-    {
-        _all = true;
-    }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether all the
-    /// supported observable formats will be monitored.
-    /// </summary>
-    [ParenthesizePropertyName(true)]
-    [Category("#Clipboard: Behaviour")]
-    [Description("Sets a value indicating whether all the supported " +
-                 "observable formats will be monitored.")]
-    public bool All
-    {
-        get => _all;
-        set
-        {
-            _all = value;
-
-            Texts = value;
-            Files = value;
-            Images = value;
-            Others = value;
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets a value indicating whether texts will be monitored.
-    /// </summary>
-    [Category("#Clipboard: Behaviour")]
-    [Description("Sets a value indicating whether texts will be monitored.")]
-    public bool Texts { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether files will be monitored.
-    /// </summary>
-    [Category("#Clipboard: Behaviour")]
-    [Description("Sets a value indicating whether files will be monitored.")]
-    public bool Files { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether images will be monitored.
-    /// </summary>
-    [Category("#Clipboard: Behaviour")]
-    [Description("Sets a value indicating whether images will be monitored.")]
-    public bool Images { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether other
-    /// complex object-types will be monitored.
-    /// </summary>
-    [Category("#Clipboard: Behaviour")]
-    [Description("Sets a value indicating whether other " +
-                 "complex object-types will be monitored.")]
-    public bool Others { get; set; } = true;
-
-    /// <summary>
-    /// Returns a <see cref="string" /> containing the list of observable data
-    /// formats provided and their applied statuses separated by semi-colons.
-    /// </summary>
-    public override string ToString()
-    {
-        return $"Texts: {Texts}; Images: {Images}; Files: {Files}; Others: {Others}";
-    }
-}
-
-/// <summary>
-/// Stores details of the application from
-/// where the clipboard's content were copied.
-/// </summary>
-[EditorBrowsable(EditorBrowsableState.Never)]
-public class SourceApplication
-{
-    /// <summary>
-    /// Creates a new <see cref="SourceApplication" /> class-instance.
-    /// </summary>
-    /// <param name="id">The application's ID.</param>
-    /// <param name="handle">The application's handle.</param>
-    /// <param name="name">The application's name.</param>
-    /// <param name="title">The application's title.</param>
-    /// <param name="path">The application's path.</param>
-    internal SourceApplication(int id, IntPtr handle, string name,
-        string title, string path)
-    {
-        ID = id;
-        Name = name;
-        Path = path;
-        Title = title;
-        Handle = handle;
-    }
-
-    /// <summary>
-    /// Gets the application's process-ID.
-    /// </summary>
-    public int ID { get; }
-
-    /// <summary>
-    /// Gets the appliation's window-handle.
-    /// </summary>
-    public IntPtr Handle { get; }
-
-    /// <summary>
-    /// Gets the application's name.
-    /// </summary>
-    public string Name { get; }
-
-    /// <summary>
-    /// Gets the application's title-text.
-    /// </summary>
-    public string Title { get; }
-
-    /// <summary>
-    /// Gets the application's absolute path.
-    /// </summary>
-    public string Path { get; }
-
-    /// <summary>
-    /// Returns a <see cref="string" /> containing the list
-    /// of application details provided.
-    /// </summary>
-    public override string ToString()
-    {
-        return $"ID: {ID}; Handle: {Handle}, Name: {Name}; " +
                $"Title: {Title}; Path: {Path}";
     }
 }
