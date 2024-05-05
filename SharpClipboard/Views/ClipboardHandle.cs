@@ -21,12 +21,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using JetBrains.Annotations;
 
-namespace WK.Libraries.SharpClipboardNS.Views;
+namespace Mycoshiro.Windows.Forms.Views;
 
 /// <summary>
 /// This window acts as a handle to the clipboard-monitoring process and
@@ -34,6 +33,7 @@ namespace WK.Libraries.SharpClipboardNS.Views;
 /// the monitoring service. However, it won't be visible to anyone even via
 /// the Task Manager.
 /// </summary>
+[SuppressMessage("Usage", "CA2216:Disposable types should declare finalizer")]
 public sealed partial class ClipboardHandle : Form
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
@@ -58,6 +58,7 @@ public sealed partial class ClipboardHandle : Form
     /// <summary>
     /// Initializes a new instance of <see cref="ClipboardHandle" />.
     /// </summary>
+    [SupportedOSPlatform("windows6.0")]
     public ClipboardHandle(SharpClipboard instance)
     {
         _sharpClipboardInstance = instance;
@@ -90,10 +91,11 @@ public sealed partial class ClipboardHandle : Form
     }
 
     /// <summary>
-    /// Modifications in this overriden method have
+    /// Modifications in this overridden method have
     /// been added to disable viewing of the handle-
     /// window in the Task Manager.
     /// </summary>
+    [SupportedOSPlatform("windows6.0")]
     protected override CreateParams CreateParams
     {
         get
@@ -107,6 +109,9 @@ public sealed partial class ClipboardHandle : Form
         }
     }
 
+    /// <summary>
+    /// Return the Process Name of the current active window.
+    /// </summary>
     [PublicAPI]
     public string? ProcessName
     {
@@ -117,14 +122,15 @@ public sealed partial class ClipboardHandle : Form
         }
     }
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr SetClipboardViewer(IntPtr hWndNewViewer);
 
-    [DllImport("user32.dll")]
-    private static extern bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool ChangeClipboardChain(IntPtr hWndRemove, IntPtr hWndNewNext);
 
-    [DllImport("user32.dll")]
-    private static extern int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
+    [LibraryImport("user32.dll")]
+    private static partial int SendMessage(IntPtr hwnd, int wMsg, IntPtr wParam, IntPtr lParam);
 
     /// <summary>
     /// This is the main clipboard detection method.
@@ -175,37 +181,38 @@ public sealed partial class ClipboardHandle : Form
                     {
                         // Determines whether a file/files have been cut/copied.
                         if (_sharpClipboardInstance.ObservableFormats.Files &&
-                            dataObj.GetDataPresent(DataFormats.FileDrop))
+                            dataObj?.GetDataPresent(DataFormats.FileDrop) != null)
                         {
-                            string?[] capturedFiles = (string?[])dataObj.GetData(DataFormats.FileDrop);
-
-                            // If the 'capturedFiles' string array persists as null, then this means
-                            // that the copied content is of a complex object type since the file-drop
-                            // format is able to capture more-than-just-file content in the clipboard.
-                            // Therefore assign the content its rightful type.
-                            if (capturedFiles == null)
-                            {
-                                _sharpClipboardInstance.ClipboardObject = dataObj;
-                                _sharpClipboardInstance.ClipboardText =
-                                    dataObj.GetData(DataFormats.UnicodeText)?.ToString() ?? string.Empty;
-
-                                _sharpClipboardInstance.Invoke(dataObj, SharpClipboard.ContentTypes.Other,
-                                    new SourceApplication(GetForegroundWindow(),
-                                        SharpClipboard.ForegroundWindowHandle(),
-                                        GetApplicationName(), GetActiveWindowTitle(), GetApplicationPath()));
-                            }
-                            else
+                            if (dataObj.GetData(DataFormats.FileDrop) is string?[] capturedFiles)
                             {
                                 // Clear all existing files before update.
-                                _sharpClipboardInstance.ClipboardFiles.Clear();
-
-                                _sharpClipboardInstance.ClipboardFiles.AddRange(capturedFiles);
+                                _sharpClipboardInstance.SetClipboardFiles(capturedFiles);
                                 _sharpClipboardInstance.ClipboardFile = capturedFiles[0];
 
                                 _sharpClipboardInstance.Invoke(capturedFiles, SharpClipboard.ContentTypes.Files,
                                     new SourceApplication(GetForegroundWindow(),
                                         SharpClipboard.ForegroundWindowHandle(),
                                         GetApplicationName(), GetActiveWindowTitle(), GetApplicationPath()));
+                            }
+                            // If the 'capturedFiles' string array persists as null, then this means
+                            // that the copied content is of a complex object type since the file-drop
+                            // format is able to capture more-than-just-file content in the clipboard.
+                            // Therefore assign the content its rightful type.
+                            else
+                            {
+                                _sharpClipboardInstance.ClipboardObject = dataObj;
+                                _sharpClipboardInstance.ClipboardText =
+                                    dataObj.GetData(DataFormats.UnicodeText)?.ToString() ?? string.Empty;
+
+                                _sharpClipboardInstance.Invoke(
+                                    dataObj,
+                                    SharpClipboard.ContentTypes.Other,
+                                    new SourceApplication(
+                                        GetForegroundWindow(),
+                                        SharpClipboard.ForegroundWindowHandle(),
+                                        GetApplicationName(),
+                                        GetActiveWindowTitle(),
+                                        GetApplicationPath()));
                             }
                         }
 
@@ -254,7 +261,7 @@ public sealed partial class ClipboardHandle : Form
                 }
 
                 // Provides support for multi-instance clipboard monitoring.
-                SendMessage(_chainedWnd, m.Msg, m.WParam, m.LParam);
+                _ = SendMessage(_chainedWnd, m.Msg, m.WParam, m.LParam);
 
                 break;
 
@@ -266,39 +273,46 @@ public sealed partial class ClipboardHandle : Form
                 }
                 else
                 {
-                    SendMessage(_chainedWnd, m.Msg, m.WParam, m.LParam);
+                    _ = SendMessage(_chainedWnd, m.Msg, m.WParam, m.LParam);
                 }
 
                 break;
         }
     }
 
+    /// <summary>
+    /// Start monitoring the clipboard.
+    /// </summary>
+    [SupportedOSPlatform("windows6.0")]
     public void StartMonitoring()
     {
         Show();
     }
 
+    /// <summary>
+    /// Stop monitoring the clipboard.
+    /// </summary>
+    [SupportedOSPlatform("windows6.0")]
     public void StopMonitoring()
     {
         Close();
     }
 
-    [DllImport("user32.dll")]
-    private static extern int GetForegroundWindow();
+    [LibraryImport("user32.dll")]
+    private static partial int GetForegroundWindow();
 
-    [DllImport("user32.dll")]
-    private static extern IntPtr GetForegroundWindowPtr();
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr GetForegroundWindowPtr();
 
-    [DllImport("user32.dll")]
-    private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+    [LibraryImport("user32.dll", EntryPoint = "GetWindowTextW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    private static partial int GetWindowText(IntPtr hWnd, [Out] char[] lpString, int nMaxCount);
 
-    [DllImport("user32")]
-    private static extern uint GetWindowThreadProcessId(int hWnd, out int lpdwProcessId);
+    [LibraryImport("user32.dll")]
+    private static partial uint GetWindowThreadProcessId(int hWnd, out int lpdwProcessId);
 
-    private int GetProcessID(int hwnd)
+    private static int GetProcessID(int hwnd)
     {
-        int processID = 1;
-        GetWindowThreadProcessId(hwnd, out processID);
+        _ = GetWindowThreadProcessId(hwnd, out int processID);
 
         return processID;
     }
@@ -313,7 +327,7 @@ public sealed partial class ClipboardHandle : Form
             _executablePath = Process.GetProcessById(GetProcessID(hwnd)).MainModule?.FileName;
             _executableName = _executablePath?[(_executablePath.LastIndexOf('\\') + 1)..];
         }
-        catch (Exception)
+        catch (ArgumentException)
         {
         }
 
@@ -325,29 +339,27 @@ public sealed partial class ClipboardHandle : Form
         return _executablePath;
     }
 
-    private string GetActiveWindowTitle()
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types")]
+    private static string? GetActiveWindowTitle()
     {
         const int capacity = 256;
-        StringBuilder content = null;
-        IntPtr handle = IntPtr.Zero;
-
+        string? result = null;
         try
         {
-            content = new StringBuilder(capacity);
-            handle = SharpClipboard.ForegroundWindowHandle();
+            char[] buffer = new char[capacity];
+            nint handle = SharpClipboard.ForegroundWindowHandle();
+            int length = GetWindowText(handle, buffer, capacity);
+            result = new string(buffer, 0, length);
         }
-        catch (Exception)
+        catch (SystemException)
         {
         }
 
-        if (GetWindowText(handle, content, capacity) > 0)
-        {
-            return content.ToString();
-        }
 
-        return null;
+        return result;
     }
 
+    [SupportedOSPlatform("windows6.0")]
     private void OnLoad(object sender, EventArgs e)
     {
         // Start listening for clipboard changes.
@@ -356,6 +368,7 @@ public sealed partial class ClipboardHandle : Form
         Ready = true;
     }
 
+    [SupportedOSPlatform("windows6.0")]
     private void OnClose(object sender, FormClosingEventArgs e)
     {
         // Stop listening to clipboard changes.

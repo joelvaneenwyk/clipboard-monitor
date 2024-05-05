@@ -30,6 +30,7 @@ csharp_style_expression_bodied_indexers = true:silent
 csharp_style_expression_bodied_accessors = true:silent
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
+csharp_space_around_binary_operators = before_and_after
 
 [*.sln]
 indent_style = tab
@@ -43,6 +44,10 @@ indent_size = 2
 #
 # C# Properties
 #
+
+dotnet_diagnostic.CA1051.severity = none
+dotnet_diagnostic.CA2213.severity = none
+dotnet_diagnostic.CA5392.severity = none
 
 # noinspection EditorConfigKeyCorrectness
 [*.{appxmanifest,cs,cshtml,cu,cuh,cxx,cxxm,dtd,feature,fs,fsi,fsscript,resw,resx,vb,xaml,xamlx,xoml,xsd}]
@@ -59,7 +64,7 @@ dotnet_naming_rule.unity_serialized_field_rule.style = lower_camel_case_style
 dotnet_naming_rule.unity_serialized_field_rule.symbols = unity_serialized_field_symbols
 dotnet_naming_style.lower_camel_case_style.capitalization = camel_case
 dotnet_naming_symbols.unity_serialized_field_symbols.applicable_accessibilities = *
-dotnet_naming_symbols.unity_serialized_field_symbols.applicable_kinds = 
+dotnet_naming_symbols.unity_serialized_field_symbols.applicable_kinds =
 dotnet_naming_symbols.unity_serialized_field_symbols.resharper_applicable_kinds = unity_serialised_field
 dotnet_naming_symbols.unity_serialized_field_symbols.resharper_required_modifiers = instance
 dotnet_style_parentheses_in_arithmetic_binary_operators = never_if_unnecessary:none

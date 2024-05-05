@@ -1,4 +1,4 @@
-﻿namespace WK.Libraries.SharpClipboardNS.Views
+﻿namespace Mycoshiro.Windows.Forms.Views
 {
     sealed partial class ClipboardHandle
     {
@@ -35,9 +35,9 @@
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // panel1
-            // 
+            //
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.lblInformation);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -45,9 +45,9 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(408, 125);
             this.panel1.TabIndex = 2;
-            // 
+            //
             // pictureBox1
-            // 
+            //
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(178, 14);
             this.pictureBox1.Name = "pictureBox1";
@@ -55,9 +55,9 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
-            // 
+            //
             // lblInformation
-            // 
+            //
             this.lblInformation.AutoSize = true;
             this.lblInformation.ForeColor = System.Drawing.Color.DimGray;
             this.lblInformation.Location = new System.Drawing.Point(24, 72);
@@ -65,9 +65,9 @@
             this.lblInformation.Size = new System.Drawing.Size(360, 39);
             this.lblInformation.TabIndex = 2;
             this.lblInformation.Text = resources.GetString("lblInformation.Text");
-            // 
+            //
             // ClipboardHandle
-            // 
+            //
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(408, 125);
             this.Controls.Add(this.panel1);

@@ -15,25 +15,79 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Threading;
 using System.Windows.Forms.Design.Behavior;
 using JetBrains.Annotations;
-using WK.Libraries.SharpClipboardNS.Views;
+using Mycoshiro.Windows.Forms.Views;
+using static Mycoshiro.Windows.Forms.SharpClipboard;
 using Timer = System.Windows.Forms.Timer;
 
-namespace WK.Libraries.SharpClipboardNS;
+namespace Mycoshiro.Windows.Forms;
+
+/// <summary>
+/// Provides data for the <see cref="SharpClipboard.ClipboardChanged" /> event.
+/// </summary>
+public class ClipboardChangedEventArgs : EventArgs
+{
+    /// <summary>
+    /// Provides data for the <see cref="SharpClipboard.ClipboardChanged" /> event.
+    /// </summary>
+    /// <param name="content">The current clipboard content.</param>
+    /// <param name="contentType">The current clipboard-content-type.</param>
+    /// <param name="source"></param>
+    private ClipboardChangedEventArgs(object? content, ContentTypes contentType, SourceApplication? source)
+    {
+        Content = content;
+        ContentType = contentType;
+        SourceApplication = new SourceApplication(source);
+    }
+
+    /// <summary>
+    /// Gets the currently copied clipboard content.
+    /// </summary>
+    [PublicAPI]
+    public object? Content { get; }
+
+    /// <summary>
+    /// Gets the currently copied clipboard content-type.
+    /// </summary>
+    [PublicAPI]
+    public ContentTypes ContentType { get; }
+
+    /// <summary>
+    /// Gets the application from where the
+    /// clipboard's content were copied.
+    /// </summary>
+    [PublicAPI]
+    public SourceApplication SourceApplication { get; }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="ClipboardChangedEventArgs" />.
+    /// </summary>
+    /// <param name="content"></param>
+    /// <param name="contentType"></param>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static ClipboardChangedEventArgs CreateInstance(
+        object? content, ContentTypes contentType, SourceApplication source)
+    {
+        return new ClipboardChangedEventArgs(content, contentType, source);
+    }
+}
 
 /// <summary>
 /// Assists in anonymously monitoring the system clipboard by
 /// detecting any copied/cut data and the type of data it is.
 /// </summary>
 [PublicAPI]
-[Designer(typeof(WKDesigner))]
+[Designer(typeof(SharpClipboardDesigner))]
 [DefaultEvent("ClipboardChanged")]
 [DefaultProperty("MonitorClipboard")]
 [Description("Assists in anonymously monitoring the system clipboard by " +
@@ -68,6 +122,7 @@ public sealed partial class SharpClipboard : Component
 
     private readonly Lazy<ClipboardHandle> _handle;
 
+    [SupportedOSPlatform("windows6.0")]
     private readonly Timer _timer = new();
 
     private bool _monitorClipboard;
@@ -81,6 +136,7 @@ public sealed partial class SharpClipboard : Component
     /// <param name="container">
     /// The container hosting the component.
     /// </param>
+    [SupportedOSPlatform("windows6.0")]
     public SharpClipboard(IContainer? container = null)
     {
         _handle = new Lazy<ClipboardHandle>(
@@ -183,12 +239,25 @@ public sealed partial class SharpClipboard : Component
     [Browsable(false)]
     public string? ClipboardFile { get; internal set; }
 
+    private readonly List<string?> _clipboardFiles = [];
+
+    internal void SetClipboardFiles(IEnumerable<string?>? files)
+    {
+        _clipboardFiles.Clear();
+        if (files != null)
+        {
+            _clipboardFiles.AddRange(files);
+        }
+        ClipboardFile = _clipboardFiles.FirstOrDefault();
+    }
+
     /// <summary>
     /// Gets the currently cut/copied clipboard file-paths.
     /// </summary>
     [PublicAPI]
     [Browsable(false)]
-    public List<string?> ClipboardFiles { get; internal set; } = new();
+    public ReadOnlyCollection<string?> ClipboardFiles => _clipboardFiles.AsReadOnly();
+
 
     /// <summary>
     /// Gets the currently cut/copied clipboard image.
@@ -222,6 +291,7 @@ public sealed partial class SharpClipboard : Component
     /// initializes the system clipboard-access handle.
     /// </summary>
     [PublicAPI]
+    [SupportedOSPlatform("windows6.0")]
     public void StartMonitoring()
     {
         _handle.Value.Show();
@@ -232,6 +302,7 @@ public sealed partial class SharpClipboard : Component
     /// shuts the system clipboard-access handle.
     /// </summary>
     [PublicAPI]
+    [SupportedOSPlatform("windows6.0")]
     public void StopMonitoring()
     {
         _handle.Value.Close();
@@ -240,6 +311,7 @@ public sealed partial class SharpClipboard : Component
     /// <summary>
     /// Apply library-default settings and launch code.
     /// </summary>
+    [SupportedOSPlatform("windows6.0")]
     private void SetDefaults()
     {
         _timer.Enabled = true;
@@ -258,14 +330,14 @@ public sealed partial class SharpClipboard : Component
     /// <param name="source"></param>
     internal void Invoke(object? content, ContentTypes type, SourceApplication source)
     {
-        ClipboardChanged(this, ClipboardChangedEventArgs.CreateInstance(content, type, source));
+        ClipboardChanged?.Invoke(this, ClipboardChangedEventArgs.CreateInstance(content, type, source));
     }
 
     /// <summary>
     /// Gets the foreground or currently active window handle.
     /// </summary>
-    [DllImport("user32.dll")]
-    private static extern IntPtr GetForegroundWindow();
+    [LibraryImport("user32.dll")]
+    private static partial IntPtr GetForegroundWindow();
 
     /// <summary>
     /// This event is triggered whenever the
@@ -302,7 +374,8 @@ public sealed partial class SharpClipboard : Component
     /// clipboard-monitoring service. The Timer will
     /// auto-shutdown once the service has started.
     /// </summary>
-    private void OnLoad(object sender, EventArgs e)
+    [SupportedOSPlatform("windows6.0")]
+    private void OnLoad(object? sender, EventArgs e)
     {
         if (!DesignMode)
         {
@@ -312,170 +385,290 @@ public sealed partial class SharpClipboard : Component
             StartMonitoring();
         }
     }
+}
+
+/// <summary>
+/// Component designer for action lists.
+/// </summary>
+public class SharpClipboardDesigner : ComponentDesigner
+{
+    private readonly Lazy<DesignerActionListCollection> _actionLists;
 
     /// <summary>
-    /// Provides data for the <see cref="ClipboardChanged" /> event.
+    /// Initializes a new instance of the <see cref="SharpClipboardDesigner" /> class.
     /// </summary>
-    public class ClipboardChangedEventArgs : EventArgs
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Style", "IDE0028:Simplify collection initialization", Justification = "<Pending>")]
+    public SharpClipboardDesigner()
     {
-        /// <summary>
-        /// Provides data for the <see cref="ClipboardChanged" /> event.
-        /// </summary>
-        /// <param name="content">The current clipboard content.</param>
-        /// <param name="contentType">The current clipboard-content-type.</param>
-        /// <param name="source"></param>
-        private ClipboardChangedEventArgs(object? content, ContentTypes contentType, SourceApplication source)
+        _actionLists = new Lazy<DesignerActionListCollection>(
+        () =>
         {
-            Content = content;
-            ContentType = contentType;
-            SourceApplication = new SourceApplication(
-                source.ID, source.Handle, source.Name, source.Title, source.Path);
+            DesignerActionListCollection lists = new()
+            {
+                new SharpClipboardComponentActionList(Component)
+            };
+            return lists;
+        }, LazyThreadSafetyMode.ExecutionAndPublication);
+    }
+
+    /// <summary>
+    /// Use pull model to populate smart tag menu.
+    /// </summary>
+    [SupportedOSPlatform("windows")]
+    public override DesignerActionListCollection ActionLists => _actionLists.Value;
+}
+
+/// <summary>
+/// Custom action list for clipboard component.
+/// </summary>
+public sealed class SharpClipboardComponentActionList : DesignerActionList
+{
+    [UsedImplicitly]
+    private readonly DesignerActionUIService? _designerActionService;
+
+    private readonly SharpClipboard? _sharpClipboardComponent;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SharpClipboardComponentActionList" /> class.
+    /// </summary>
+    /// <param name="component"></param>
+    [SupportedOSPlatform("windows")]
+    public SharpClipboardComponentActionList(IComponent component) : base(component)
+    {
+        _sharpClipboardComponent = component as SharpClipboard;
+
+        // Cache a reference to DesignerActionUIService so
+        // that the DesignerActionList can be refreshed.
+        _designerActionService = GetService(typeof(DesignerActionUIService)) as DesignerActionUIService;
+
+        // Automatically display Smart Tags for quick access
+        // to the most common properties needed by users.
+        AutoShow = true;
+    }
+
+    /// <summary>
+    /// Property tracking whether or not the clipboard is monitored.
+    /// </summary>
+    [PublicAPI]
+    public bool MonitorClipboard
+    {
+        get => _sharpClipboardComponent?.MonitorClipboard ?? false;
+        set => SetValue(_sharpClipboardComponent, nameof(MonitorClipboard), value);
+    }
+
+    private static PropertyDescriptor? GetPropertyDescriptor(IComponent? component, string propertyName)
+    {
+        return component == null ? null : TypeDescriptor.GetProperties(component)[propertyName];
+    }
+
+    private static IDesignerHost? GetDesignerHost(IComponent? component)
+    {
+        return component?.Site?.GetService(typeof(IDesignerHost)) as IDesignerHost;
+    }
+
+    private static IComponentChangeService? GetChangeService(IComponent? component)
+    {
+        return component?.Site?.GetService(typeof(IComponentChangeService)) as IComponentChangeService;
+    }
+
+    private static void SetValue(IComponent? component, string propertyName, object value)
+    {
+        PropertyDescriptor? propertyDescriptor = GetPropertyDescriptor(component, propertyName);
+        IComponentChangeService? svc = GetChangeService(component);
+        IDesignerHost? host = GetDesignerHost(component);
+        DesignerTransaction? txn = host?.CreateTransaction();
+
+        try
+        {
+            if (component != null)
+            {
+                svc?.OnComponentChanging(component, propertyDescriptor);
+                propertyDescriptor?.SetValue(component, value);
+                svc?.OnComponentChanged(component, propertyDescriptor, null, null);
+            }
+            txn?.Commit();
+            txn = null;
         }
-
-        /// <summary>
-        /// Gets the currently copied clipboard content.
-        /// </summary>
-        [PublicAPI]
-        public object? Content { get; }
-
-        /// <summary>
-        /// Gets the currently copied clipboard content-type.
-        /// </summary>
-        [PublicAPI]
-        public ContentTypes ContentType { get; }
-
-        /// <summary>
-        /// Gets the application from where the
-        /// clipboard's content were copied.
-        /// </summary>
-        [PublicAPI]
-        public SourceApplication SourceApplication { get; }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="ClipboardChangedEventArgs" />.     
-        /// </summary>
-        /// <param name="content"></param>
-        /// <param name="contentType"></param>
-        /// <param name="source"></param>
-        /// <returns></returns>
-        public static ClipboardChangedEventArgs CreateInstance(
-            object? content, ContentTypes contentType, SourceApplication source)
+        finally
         {
-            return new ClipboardChangedEventArgs(content, contentType, source);
+            txn?.Cancel();
         }
     }
 
     /// <summary>
-    /// Component designer for action lists.
+    /// Implementation of this abstract method creates Smart Tag items,
+    /// associates their targets, and collects them into a list.
     /// </summary>
-    public class WKDesigner : ComponentDesigner
+    [SupportedOSPlatform("windows")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Style", "IDE0028:Simplify collection initialization", Justification = "<Pending>")]
+    public override DesignerActionItemCollection GetSortedActionItems()
     {
-        private DesignerActionListCollection? _actionLists;
+        PropertyDescriptor? propertyDescriptor = GetPropertyDescriptor(Component, nameof(MonitorClipboard));
+        string actionPropertyName = propertyDescriptor?.Description ?? string.Empty;
+        DesignerActionItemCollection result = new();
+        result.Add(new DesignerActionHeaderItem(nameof(Behavior)));
+        result.Add(new DesignerActionPropertyItem(
+                    nameof(MonitorClipboard),
+                    "Monitor Clipboard",
+                    nameof(Behavior),
+                    actionPropertyName));
+        return result;
+    }
+}
 
-        /// <summary>
-        /// Use pull model to populate smart tag menu.
-        /// </summary>
-        [SupportedOSPlatform("windows")]
-        public override DesignerActionListCollection ActionLists
+/// <summary>
+/// Provides a list of supported observable data formats
+/// that can be monitored from the system clipboard.
+/// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
+[TypeConverter(typeof(ExpandableObjectConverter))]
+[Description("Provides a list of supported observable data formats " +
+             "that can be monitored from the system clipboard.")]
+public class ObservableDataFormats
+{
+    private bool _all;
+
+    /// <summary>
+    /// Creates a new <see cref="ObservableDataFormats" /> options class-instance.
+    /// </summary>
+    public ObservableDataFormats()
+    {
+        _all = true;
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether all the
+    /// supported observable formats will be monitored.
+    /// </summary>
+    [ParenthesizePropertyName(true)]
+    [Category("#Clipboard: Behaviour")]
+    [Description("Sets a value indicating whether all the supported " +
+                 "observable formats will be monitored.")]
+    public bool All
+    {
+        get => _all;
+        set
         {
-            get
-            {
-                _actionLists ??= [new WKComponentActionList(Component)];
-                return _actionLists;
-            }
+            _all = value;
+
+            Texts = value;
+            Files = value;
+            Images = value;
+            Others = value;
         }
     }
 
     /// <summary>
-    /// Custom action list for clipboard component.
+    /// Gets or sets a value indicating whether texts will be monitored.
     /// </summary>
-    public class WKComponentActionList : DesignerActionList
+    [Category("#Clipboard: Behaviour")]
+    [Description("Sets a value indicating whether texts will be monitored.")]
+    public bool Texts { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether files will be monitored.
+    /// </summary>
+    [Category("#Clipboard: Behaviour")]
+    [Description("Sets a value indicating whether files will be monitored.")]
+    public bool Files { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether images will be monitored.
+    /// </summary>
+    [Category("#Clipboard: Behaviour")]
+    [Description("Sets a value indicating whether images will be monitored.")]
+    public bool Images { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether other
+    /// complex object-types will be monitored.
+    /// </summary>
+    [Category("#Clipboard: Behaviour")]
+    [Description("Sets a value indicating whether other " +
+                 "complex object-types will be monitored.")]
+    public bool Others { get; set; } = true;
+
+    /// <summary>
+    /// Returns a <see cref="string" /> containing the list of observable data
+    /// formats provided and their applied statuses separated by semi-colons.
+    /// </summary>
+    public override string ToString()
     {
-        private readonly DesignerActionUIService? designerActionUISvc;
-        private readonly SharpClipboard? WKComponent;
+        return $"Texts: {Texts}; Images: {Images}; Files: {Files}; Others: {Others}";
+    }
+}
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WKComponentActionList" /> class.
-        /// </summary>
-        /// <param name="component"></param>
-        [SupportedOSPlatform("windows")]
-        public WKComponentActionList(IComponent component) : base(component)
-        {
-            WKComponent = component as SharpClipboard;
+/// <summary>
+/// Stores details of the application from
+/// where the clipboard's content were copied.
+/// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
+public sealed class SourceApplication
+{
+    /// <summary>
+    /// Creates a new <see cref="SourceApplication" /> class-instance.
+    /// </summary>
+    /// <param name="id">The application's Id.</param>
+    /// <param name="handle">The application's handle.</param>
+    /// <param name="name">The application's name.</param>
+    /// <param name="title">The application's title.</param>
+    /// <param name="path">The application's path.</param>
+    internal SourceApplication(
+        int id, IntPtr handle,
+        string? name, string? title, string? path)
+    {
+        Id = id;
+        Name = name;
+        Path = path;
+        Title = title;
+        Handle = handle;
+    }
 
-            // Cache a reference to DesignerActionUIService so
-            // that the DesignerActionList can be refreshed.
-            designerActionUISvc = GetService(typeof(DesignerActionUIService))
-                as DesignerActionUIService;
+    internal SourceApplication(SourceApplication? source)
+        : this(source?.Id ?? 0, source?.Handle ?? IntPtr.Zero, source?.Name, source?.Title, source?.Path)
+    {
+    }
 
-            // Automatically display Smart Tags for quick access
-            // to the most common properties needed by users.
-            AutoShow = true;
-        }
+    /// <summary>
+    /// Gets the application's process-Id.
+    /// </summary>
+    [PublicAPI]
+    public readonly int Id;
 
-        [PublicAPI]
-        public bool MonitorClipboard
-        {
-            get => WKComponent?.MonitorClipboard ?? false;
-            set => SetValue(WKComponent, "MonitorClipboard", value);
-        }
+    /// <summary>
+    /// Gets the application's window-handle.
+    /// </summary>
+    [PublicAPI]
+    public readonly IntPtr Handle;
 
-        private static PropertyDescriptor? GetPropertyDescriptor(IComponent? component, string propertyName)
-        {
-            return component == null ? null : TypeDescriptor.GetProperties(component)[propertyName];
-        }
+    /// <summary>
+    /// Gets the application's name.
+    /// </summary>
+    [PublicAPI]
+    public readonly string? Name;
 
-        private static IDesignerHost? GetDesignerHost(IComponent? component)
-        {
-            return component?.Site?.GetService(typeof(IDesignerHost)) as IDesignerHost;
-        }
+    /// <summary>
+    /// Gets the application's title-text.
+    /// </summary>
+    [PublicAPI]
+    public readonly string? Title;
 
-        private static IComponentChangeService? GetChangeService(IComponent? component)
-        {
-            return component?.Site?.GetService(typeof(IComponentChangeService)) as IComponentChangeService;
-        }
+    /// <summary>
+    /// Gets the application's absolute path.
+    /// </summary>
+    [PublicAPI]
+    public readonly string? Path;
 
-        private static void SetValue(IComponent? component, string propertyName, object value)
-        {
-            PropertyDescriptor? propertyDescriptor = GetPropertyDescriptor(component, propertyName);
-            IComponentChangeService? svc = GetChangeService(component);
-            IDesignerHost? host = GetDesignerHost(component);
-            DesignerTransaction? txn = host?.CreateTransaction();
-
-            try
-            {
-                if (component != null)
-                {
-                    svc?.OnComponentChanging(component, propertyDescriptor);
-                    propertyDescriptor?.SetValue(component, value);
-                    svc?.OnComponentChanged(component, propertyDescriptor, null, null);
-                }
-                txn?.Commit();
-                txn = null;
-            }
-            finally
-            {
-                txn?.Cancel();
-            }
-        }
-
-        /// <summary>
-        /// Implementation of this abstract method creates Smart Tag items,
-        /// associates their targets, and collects them into a list.
-        /// </summary>
-        [SupportedOSPlatform("windows")]
-        public override DesignerActionItemCollection GetSortedActionItems()
-        {
-            DesignerActionItemCollection items =
-            [
-                new DesignerActionHeaderItem(nameof(Behavior)),
-                new DesignerActionPropertyItem(nameof(MonitorClipboard),
-                    "Monitor Clipboard", "Behaviour",
-                    GetPropertyDescriptor(Component, nameof(MonitorClipboard))?.Description ?? string.Empty)
-            ];
-
-            return items;
-        }
+    /// <summary>
+    /// Returns a <see cref="string" /> containing the list
+    /// of application details provided.
+    /// </summary>
+    public override string ToString()
+    {
+        return $"Id: {Id}; Handle: {Handle}, Name: {Name}; " +
+               $"Title: {Title}; Path: {Path}";
     }
 }
 

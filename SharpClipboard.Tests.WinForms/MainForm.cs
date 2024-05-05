@@ -3,15 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
-using JetBrains.Annotations;
 
 namespace SharpClipboard.Tests.WinForms;
 
 public partial class MainForm : Form
 {
-    [UsedImplicitly]
-    private static readonly WK.Libraries.SharpClipboardNS.SharpClipboard Clipboard = new();
-
     public MainForm()
     {
         InitializeComponent();
@@ -43,9 +39,9 @@ public partial class MainForm : Form
     }
 
     private void sharpClipboard1_ClipboardChanged(object sender,
-        WK.Libraries.SharpClipboardNS.SharpClipboard.ClipboardChangedEventArgs e)
+        Mycoshiro.Windows.Forms.ClipboardChangedEventArgs e)
     {
-        if (e.ContentType == WK.Libraries.SharpClipboardNS.SharpClipboard.ContentTypes.Text)
+        if (e.ContentType == Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Text)
         {
             txtCopiedTexts.Text = sharpClipboard1.ClipboardText;
 
@@ -53,7 +49,7 @@ public partial class MainForm : Form
             // ---------------------------
             // txtCopiedTexts.Text = (string)e.Content;
         }
-        else if (e.ContentType == WK.Libraries.SharpClipboardNS.SharpClipboard.ContentTypes.Image)
+        else if (e.ContentType == Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Image)
         {
             pbCopiedImage.Image = sharpClipboard1.ClipboardImage;
 
@@ -61,7 +57,7 @@ public partial class MainForm : Form
             // ---------------------------
             // pbCopiedImage.Image = (Image)e.Content;
         }
-        else if (e.ContentType == WK.Libraries.SharpClipboardNS.SharpClipboard.ContentTypes.Files)
+        else if (e.ContentType == Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Files)
         {
             // Declare variable to add the list of copied files.
             var files = new List<string>();
@@ -69,7 +65,7 @@ public partial class MainForm : Form
             // Add all copied files to the declared variable.
             foreach (string file in sharpClipboard1.ClipboardFiles) files.Add(Path.GetFileName(file));
 
-            Debug.WriteLine(sharpClipboard1.ClipboardFiles.ToArray());
+            Debug.WriteLine(sharpClipboard1.ClipboardFiles);
 
             // Add all copied files to the files ListBox.
             lstCopiedFiles.Items.Clear();
@@ -79,7 +75,7 @@ public partial class MainForm : Form
             // ---------------------------
             // lstCopiedFiles.Items.AddRange(((List<string>)e.Content).ToArray()));
         }
-        else if (e.ContentType == WK.Libraries.SharpClipboardNS.SharpClipboard.ContentTypes.Other)
+        else if (e.ContentType == Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Other)
         {
             // Do something with 'e.Content' or alternatively
             // 'sharpClipboard1.ClipboardObject' property here...
@@ -101,7 +97,7 @@ public partial class MainForm : Form
         // textBox1.Text =
         //     $"Name: {e.SourceApplication.Name} \n" +
         //     $"Title: {e.SourceApplication.Title} \n" +
-        //     $"ID: {e.SourceApplication.ID} \n" +
+        //     $"Id: {e.SourceApplication.Id} \n" +
         //     $"Handle: {e.SourceApplication.Handle} \n" +
         //     $"Path: {e.SourceApplication.Path}";
         // --------------------------------------------------------

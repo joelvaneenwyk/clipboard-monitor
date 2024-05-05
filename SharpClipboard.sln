@@ -2,9 +2,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpClipboard", "SharpClipboard\SharpClipboard.csproj", "{005C3326-D638-4113-AEBB-A83433CC015E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpClipboard", "SharpClipboard/SharpClipboard.csproj", "{005C3326-D638-4113-AEBB-A83433CC015E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpClipboard.Tests.WinForms", "SharpClipboard.Tests.WinForms\SharpClipboard.Tests.WinForms.csproj", "{D73E5EB1-DC2F-46E2-A30D-D76ECF2C4A07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpClipboard.Tests.WinForms", "SharpClipboard.Tests.WinForms/SharpClipboard.Tests.WinForms.csproj", "{D73E5EB1-DC2F-46E2-A30D-D76ECF2C4A07}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Global", ".Global", "{08441EC0-2515-4E83-BAAD-6C359E647778}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		_config.yml = _config.yml
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{9D9C1DA2-2A1D-47B5-933E-DF23E866504D}"
+	ProjectSection(SolutionItems) = preProject
+		.github/FUNDING.yml = .github/FUNDING.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{AD9A07EB-24AA-4174-944B-C8B2D2EE3BAE}"
+	ProjectSection(SolutionItems) = preProject
+		.github/workflows/dotnet.yml = .github/workflows/dotnet.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".Global", ".Global", "{08441EC0-2515-4E83-BAAD-6C359E647778}"
 	ProjectSection(SolutionItems) = preProject
