@@ -7,7 +7,7 @@ namespace SharpClipboard.Tests.WinForms
     /// <summary>
     /// Default program class.
     /// </summary>
-    public static class Program
+    internal static class Program
     {
         /// <summary>
         ///  The main entry point for the application.
@@ -16,10 +16,20 @@ namespace SharpClipboard.Tests.WinForms
         [STAThread]
         public static void Main()
         {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
+            _ = Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            MainForm form = null;
+            try
+            {
+                form = new MainForm();
+                Application.Run(form);
+            }
+            finally
+            {
+                form?.Dispose();
+            }
         }
     }
 }
