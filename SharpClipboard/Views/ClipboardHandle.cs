@@ -294,6 +294,7 @@ public sealed partial class ClipboardHandle : Form
     /// <summary>
     /// Start monitoring the clipboard.
     /// </summary>
+    [PublicAPI]
     [SupportedOSPlatform("windows6.0")]
     public void StartMonitoring()
     {
@@ -303,6 +304,7 @@ public sealed partial class ClipboardHandle : Form
     /// <summary>
     /// Stop monitoring the clipboard.
     /// </summary>
+    [PublicAPI]
     [SupportedOSPlatform("windows6.0")]
     public void StopMonitoring()
     {
@@ -313,6 +315,7 @@ public sealed partial class ClipboardHandle : Form
     private static partial int GetForegroundWindow();
 
     [LibraryImport("user32.dll")]
+    [PublicAPI]
     private static partial IntPtr GetForegroundWindowPtr();
 
     [LibraryImport("user32.dll", EntryPoint = "GetWindowTextW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]

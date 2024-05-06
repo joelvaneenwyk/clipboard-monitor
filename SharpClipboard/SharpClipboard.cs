@@ -404,10 +404,7 @@ public class SharpClipboardDesigner : ComponentDesigner
         _actionLists = new Lazy<DesignerActionListCollection>(
         () =>
         {
-            DesignerActionListCollection lists = new()
-            {
-                new SharpClipboardComponentActionList(Component)
-            };
+            DesignerActionListCollection lists = [new SharpClipboardComponentActionList(Component)];
             return lists;
         }, LazyThreadSafetyMode.ExecutionAndPublication);
     }
@@ -539,6 +536,7 @@ public class ObservableDataFormats
     /// Gets or sets a value indicating whether all the
     /// supported observable formats will be monitored.
     /// </summary>
+    [PublicAPI]
     [ParenthesizePropertyName(true)]
     [Category("#Clipboard: Behaviour")]
     [Description("Sets a value indicating whether all the supported " +
