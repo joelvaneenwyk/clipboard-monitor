@@ -9,7 +9,7 @@ namespace SharpClipboard.Tests.WinForms;
 /// <summary>
 /// Main form used for testing the SharpClipboard library.      
 /// </summary>
-public partial class MainForm : Form
+internal sealed partial class MainForm : Form
 {
     /// <summary>
     /// Initialize new instance of the main form.
@@ -47,51 +47,52 @@ public partial class MainForm : Form
     private void sharpClipboard1_ClipboardChanged(object sender,
         Mycoshiro.Windows.Forms.ClipboardChangedEventArgs e)
     {
-        if (e.ContentType == Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Text)
+        switch (e.ContentType)
         {
-            txtCopiedTexts.Text = sharpClipboard1.ClipboardText;
+            case Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Text:
+                txtCopiedTexts.Text = sharpClipboard1.ClipboardText ?? string.Empty;
 
-            // Alternatively, you can use:
-            // ---------------------------
-            // txtCopiedTexts.Text = (string)e.Content;
-        }
-        else if (e.ContentType == Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Image)
-        {
-            pbCopiedImage.Image = sharpClipboard1.ClipboardImage;
+                // Alternatively, you can use:
+                // ---------------------------
+                // txtCopiedTexts.Text = (string)e.Content;
+                break;
+            case Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Image:
+                pbCopiedImage.Image = sharpClipboard1.ClipboardImage;
 
-            // Alternatively, you can use:
-            // ---------------------------
-            // pbCopiedImage.Image = (Image)e.Content;
-        }
-        else if (e.ContentType == Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Files)
-        {
-            // Declare variable to add the list of copied files.
+                // Alternatively, you can use:
+                // ---------------------------
+                // pbCopiedImage.Image = (Image)e.Content;
+                break;
+            case Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Files:
+                // Declare variable to add the list of copied files.
 
-            // Add all copied files to the declared variable.
+                // Add all copied files to the declared variable.
 
-            Debug.WriteLine(sharpClipboard1.ClipboardFiles);
+                Debug.WriteLine(sharpClipboard1.ClipboardFiles);
 
-            // Add all copied files to the files ListBox.
-            lstCopiedFiles.Items.Clear();
-            lstCopiedFiles.Items.AddRange(sharpClipboard1.ClipboardFiles.Select(Path.GetFileName) as object[] ?? []);
+                // Add all copied files to the files ListBox.
+                lstCopiedFiles.Items.Clear();
+                lstCopiedFiles.Items.AddRange(sharpClipboard1.ClipboardFiles.Select(Path.GetFileName) as object[] ?? []);
 
-            // Alternatively, you can use:
-            // ---------------------------
-            // lstCopiedFiles.Items.AddRange(((List<string>)e.Content).ToArray()));
-        }
-        else if (e.ContentType == Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Other)
-        {
-            // Do something with 'e.Content' or alternatively
-            // 'sharpClipboard1.ClipboardObject' property here...
+                // Alternatively, you can use:
+                // ---------------------------
+                // lstCopiedFiles.Items.AddRange(((List<string>)e.Content).ToArray()));
+                break;
+            case Mycoshiro.Windows.Forms.SharpClipboard.ContentTypes.Other:
+                // Do something with 'e.Content' or alternatively
+                // 'sharpClipboard1.ClipboardObject' property here...
 
-            // A great example is when a user has copied an Outlook Mail item.
-            // Such an item will be of a complex object-type that can be parsed and
-            // examined using the 'Microsoft.Office.Interop.Outlook' namespace features.
-            // See here: https://stackoverflow.com/questions/25375367/how-to-copy-mailitem-in-outlook-c-sharp
+                // A great example is when a user has copied an Outlook Mail item.
+                // Such an item will be of a complex object-type that can be parsed and
+                // examined using the 'Microsoft.Office.Interop.Outlook' namespace features.
+                // See here: https://stackoverflow.com/questions/25375367/how-to-copy-mailitem-in-outlook-c-sharp
 
-            // You can however still use the 'ClipboardText' property if you
-            // prefer simply displaying the copied object in text format.
-            txtCopiedTexts.Text = sharpClipboard1.ClipboardText;
+                // You can however still use the 'ClipboardText' property if you
+                // prefer simply displaying the copied object in text format.
+                txtCopiedTexts.Text = sharpClipboard1.ClipboardText ?? string.Empty;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
         // If you wish to get details of the application from where
