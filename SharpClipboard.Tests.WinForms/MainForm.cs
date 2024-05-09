@@ -3,8 +3,49 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using JetBrains.Annotations;
+using static Mycoshiro.Windows.Forms.SharpClipboard;
 
 namespace SharpClipboard.Tests.WinForms;
+
+/// <inheritdoc />
+[PublicAPI]
+public sealed class SharpClipboardInvalidTypeException : Exception
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public SharpClipboardInvalidTypeException() : base($"Invalid content type: {ContentTypes.Other}")
+    {
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="contentType"></param>
+    public SharpClipboardInvalidTypeException(ContentTypes contentType) : base($"Invalid content type: {contentType}")
+    {
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="message"></param>
+    public SharpClipboardInvalidTypeException([CanBeNull] string message)
+        : base(message)
+    {
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="inner"></param>
+    public SharpClipboardInvalidTypeException([CanBeNull] string message, [CanBeNull] Exception inner)
+        : base(message, inner)
+    {
+    }
+}
 
 /// <summary>
 /// Main form used for testing the SharpClipboard library.      
@@ -92,7 +133,7 @@ internal sealed partial class MainForm : Form
                 txtCopiedTexts.Text = sharpClipboard1.ClipboardText ?? string.Empty;
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new SharpClipboardInvalidTypeException(e.ContentType);
         }
 
         // If you wish to get details of the application from where

@@ -25,6 +25,8 @@ using System.Threading;
 using System.Windows.Forms;
 using JetBrains.Annotations;
 
+#pragma warning disable IDE0079
+
 namespace Mycoshiro.Windows.Forms.Views;
 
 /// <summary>
@@ -33,20 +35,23 @@ namespace Mycoshiro.Windows.Forms.Views;
 /// the monitoring service. However, it won't be visible to anyone even via
 /// the Task Manager.
 /// </summary>
-[SuppressMessage("Usage", "CA2216:Disposable types should declare finalizer")]
+[SuppressMessage("Usage", "CA2216:Disposable types should declare finalizer", Justification = "Not necessary in this case.")]
+[MustDisposeResource]
+[SuppressMessage("ReSharper", "MissingSuppressionJustification")]
 public sealed partial class ClipboardHandle : Form
 {
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Matches the Windows API")]
     private const int WM_DRAWCLIPBOARD = 0x0308;
 
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "InconsistentNaming", Justification = "Matches the Windows API")]
     private const int WM_CHANGECBCHAIN = 0x030D;
 
     /// <summary>
     /// Gets or sets an active <see cref="SharpClipboard" /> instance
     /// for use when managing the current clipboard handle.
     /// </summary>
-    [Browsable(false)] private readonly SharpClipboard _sharpClipboardInstance;
+    [Browsable(false)]
+    private readonly SharpClipboard _sharpClipboardInstance;
 
     private IntPtr _chainedWnd;
     private string? _executableName;
@@ -91,9 +96,8 @@ public sealed partial class ClipboardHandle : Form
     }
 
     /// <summary>
-    /// Modifications in this overridden method have
-    /// been added to disable viewing of the handle-
-    /// window in the Task Manager.
+    /// Modifications in this overridden method have been added to disable
+    /// viewing of the handle-window in the Task Manager.
     /// </summary>
     [SupportedOSPlatform("windows6.0")]
     protected override CreateParams CreateParams
@@ -135,14 +139,133 @@ public sealed partial class ClipboardHandle : Form
     [DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
     private static partial nint SendMessage(nint hWnd, int msg, nint wParam, nint lParam);
 
+    private static IDataObject? GetClipboardDataObject()
+    {
+        IDataObject? dataObj;
+        int retryCount = 0;
+
+        while (true)
+        {
+            try
+            {
+                dataObj = Clipboard.GetDataObject();
+                break;
+            }
+            catch (ExternalException)
+            {
+                // Crashes when large data is copied from clipboard
+                // without retries. We'll therefore need to do a 5-step
+                // retry count to cut some slack for the operation to
+                // fully complete and ensure that the data is captured;
+                // if all else fails, then throw an exception.
+                // You may extend the retries if need be.
+                if (++retryCount > 5)
+                {
+                    throw;
+                }
+
+                Thread.Sleep(100);
+            }
+        }
+
+        return dataObj;
+    }
+
+    private void SetClipboardFiles(IDataObject? dataObj)
+    {
+        // Determines whether a file/files have been cut/copied.
+        if (_sharpClipboardInstance.ObservableFormats.Files &&
+            dataObj?.GetDataPresent(DataFormats.FileDrop) != null)
+        {
+            if (dataObj.GetData(DataFormats.FileDrop) is string?[] capturedFiles)
+            {
+                // Clear all existing files before update.
+                _sharpClipboardInstance.SetClipboardFiles(capturedFiles);
+                _sharpClipboardInstance.ClipboardFile = capturedFiles[0];
+
+                _sharpClipboardInstance.Invoke(capturedFiles, SharpClipboard.ContentTypes.Files,
+                    new SourceApplication(GetForegroundWindow(),
+                        SharpClipboard.ForegroundWindowHandle(),
+                        GetApplicationName(), GetActiveWindowTitle(), GetApplicationPath()));
+            }
+            // If the 'capturedFiles' string array persists as null, then this means
+            // that the copied content is of a complex object type since the file-drop
+            // format is able to capture more-than-just-file content in the clipboard.
+            // Therefore, assign the content its rightful type.
+            else
+            {
+                _sharpClipboardInstance.ClipboardObject = dataObj;
+                _sharpClipboardInstance.ClipboardText =
+                    dataObj.GetData(DataFormats.UnicodeText)?.ToString() ?? string.Empty;
+
+                _sharpClipboardInstance.Invoke(
+                    dataObj,
+                    SharpClipboard.ContentTypes.Other,
+                    new SourceApplication(
+                        GetForegroundWindow(),
+                        SharpClipboard.ForegroundWindowHandle(),
+                        GetApplicationName(),
+                        GetActiveWindowTitle(),
+                        GetApplicationPath()));
+            }
+        }
+    }
+
+    private void SetClipboardImage(IDataObject? dataObj)
+    {
+        // Determines whether an image has been cut/copied.
+        if (_sharpClipboardInstance.ObservableFormats.Images &&
+            dataObj?.GetDataPresent(DataFormats.Bitmap) != null)
+        {
+            Image? capturedImage = dataObj.GetData(DataFormats.Bitmap) as Image;
+            _sharpClipboardInstance.ClipboardImage = capturedImage;
+
+            _sharpClipboardInstance.Invoke(capturedImage, SharpClipboard.ContentTypes.Image,
+                new SourceApplication(GetForegroundWindow(), SharpClipboard.ForegroundWindowHandle(),
+                    GetApplicationName(), GetActiveWindowTitle(), GetApplicationPath()));
+        }
+    }
+
+
+    private void SetClipboardText(IDataObject? dataObj)
+    {
+        // Determines whether text has been cut/copied.
+        if (_sharpClipboardInstance.ObservableFormats.Texts &&
+            dataObj != null &&
+            (dataObj.GetDataPresent(DataFormats.Text) || dataObj.GetDataPresent(DataFormats.UnicodeText)))
+        {
+            string? capturedText = (dataObj.GetData(DataFormats.UnicodeText) ?? dataObj.GetData(DataFormats.Text))?.ToString();
+            _sharpClipboardInstance.ClipboardText = capturedText;
+            _sharpClipboardInstance.Invoke(capturedText, SharpClipboard.ContentTypes.Text,
+                new SourceApplication(GetForegroundWindow(), SharpClipboard.ForegroundWindowHandle(),
+                    GetApplicationName(), GetActiveWindowTitle(), GetApplicationPath()));
+        }
+    }
+
+    private void SetClipboardOther(IDataObject? dataObj)
+    {
+        // Determines whether a complex object has been cut/copied.
+        if (_sharpClipboardInstance.ObservableFormats.Others &&
+            dataObj?.GetDataPresent(DataFormats.FileDrop) != null)
+        {
+            _sharpClipboardInstance.Invoke(dataObj, SharpClipboard.ContentTypes.Other,
+                new SourceApplication(GetForegroundWindow(), SharpClipboard.ForegroundWindowHandle(),
+                    GetApplicationName(), GetActiveWindowTitle(), GetApplicationPath()));
+        }
+    }
+
+
     /// <summary>
     /// This is the main clipboard detection method.
     /// Algorithmic customizations are most welcome.
     /// </summary>
     /// <param name="m">The processed window-reference message.</param>
     [SupportedOSPlatform("windows")]
+    [HandlesResourceDisposal]
     [SuppressMessage("ReSharper", "CognitiveComplexity")]
     [SuppressMessage("ReSharper", "RedundantEmptySwitchSection")]
+    [SuppressMessage("ReSharper", "UncatchableException")]
+    [SuppressMessage("ReSharper", "MethodTooLong")]
     protected override void WndProc(ref Message m)
     {
         base.WndProc(ref m);
@@ -151,121 +274,32 @@ public sealed partial class ClipboardHandle : Form
         {
             case { Msg: WM_DRAWCLIPBOARD }:
                 {
-                    // If clipboard-monitoring is enabled, proceed to listening.
-                    if (Ready && _sharpClipboardInstance.MonitorClipboard)
+                    try
                     {
-                        IDataObject? dataObj;
-                        int retryCount = 0;
-
-                        while (true)
+                        // If clipboard-monitoring is enabled, proceed to listening.
+                        if (Ready && _sharpClipboardInstance.MonitorClipboard)
                         {
-                            try
-                            {
-                                dataObj = Clipboard.GetDataObject();
-                                break;
-                            }
-                            catch (ExternalException)
-                            {
-                                // Crashes when large data is copied from clipboard
-                                // without retries. We'll therefore need to do a 5-step
-                                // retry count to cut some slack for the operation to
-                                // fully complete and ensure that the data is captured;
-                                // if all else fails, then throw an exception.
-                                // You may extend the retries if need be.
-                                if (++retryCount > 5)
-                                {
-                                    throw;
-                                }
-
-                                Thread.Sleep(100);
-                            }
-                        }
-
-                        try
-                        {
-                            // Determines whether a file/files have been cut/copied.
-                            if (_sharpClipboardInstance.ObservableFormats.Files &&
-                                dataObj?.GetDataPresent(DataFormats.FileDrop) != null)
-                            {
-                                if (dataObj.GetData(DataFormats.FileDrop) is string?[] capturedFiles)
-                                {
-                                    // Clear all existing files before update.
-                                    _sharpClipboardInstance.SetClipboardFiles(capturedFiles);
-                                    _sharpClipboardInstance.ClipboardFile = capturedFiles[0];
-
-                                    _sharpClipboardInstance.Invoke(capturedFiles, SharpClipboard.ContentTypes.Files,
-                                        new SourceApplication(GetForegroundWindow(),
-                                            SharpClipboard.ForegroundWindowHandle(),
-                                            GetApplicationName(), GetActiveWindowTitle(), GetApplicationPath()));
-                                }
-                                // If the 'capturedFiles' string array persists as null, then this means
-                                // that the copied content is of a complex object type since the file-drop
-                                // format is able to capture more-than-just-file content in the clipboard.
-                                // Therefore, assign the content its rightful type.
-                                else
-                                {
-                                    _sharpClipboardInstance.ClipboardObject = dataObj;
-                                    _sharpClipboardInstance.ClipboardText =
-                                        dataObj.GetData(DataFormats.UnicodeText)?.ToString() ?? string.Empty;
-
-                                    _sharpClipboardInstance.Invoke(
-                                        dataObj,
-                                        SharpClipboard.ContentTypes.Other,
-                                        new SourceApplication(
-                                            GetForegroundWindow(),
-                                            SharpClipboard.ForegroundWindowHandle(),
-                                            GetApplicationName(),
-                                            GetActiveWindowTitle(),
-                                            GetApplicationPath()));
-                                }
-                            }
-
-                            // Determines whether text has been cut/copied.
-                            else if (_sharpClipboardInstance.ObservableFormats.Texts &&
-                                     (dataObj?.GetDataPresent(DataFormats.Text) ??
-                                      dataObj?.GetDataPresent(DataFormats.UnicodeText)) != null)
-                            {
-                                string? capturedText = dataObj?.GetData(DataFormats.UnicodeText)?.ToString();
-                                _sharpClipboardInstance.ClipboardText = capturedText;
-                                _sharpClipboardInstance.Invoke(capturedText, SharpClipboard.ContentTypes.Text,
-                                    new SourceApplication(GetForegroundWindow(), SharpClipboard.ForegroundWindowHandle(),
-                                        GetApplicationName(), GetActiveWindowTitle(), GetApplicationPath()));
-                            }
-
-                            // Determines whether an image has been cut/copied.
-                            else if (_sharpClipboardInstance.ObservableFormats.Images &&
-                                     dataObj?.GetDataPresent(DataFormats.Bitmap) != null)
-                            {
-                                Image? capturedImage = dataObj.GetData(DataFormats.Bitmap) as Image;
-                                _sharpClipboardInstance.ClipboardImage = capturedImage;
-
-                                _sharpClipboardInstance.Invoke(capturedImage, SharpClipboard.ContentTypes.Image,
-                                    new SourceApplication(GetForegroundWindow(), SharpClipboard.ForegroundWindowHandle(),
-                                        GetApplicationName(), GetActiveWindowTitle(), GetApplicationPath()));
-                            }
-
-                            // Determines whether a complex object has been cut/copied.
-                            else if (_sharpClipboardInstance.ObservableFormats.Others &&
-                                     dataObj?.GetDataPresent(DataFormats.FileDrop) != null)
-                            {
-                                _sharpClipboardInstance.Invoke(dataObj, SharpClipboard.ContentTypes.Other,
-                                    new SourceApplication(GetForegroundWindow(), SharpClipboard.ForegroundWindowHandle(),
-                                        GetApplicationName(), GetActiveWindowTitle(), GetApplicationPath()));
-                            }
-                        }
-                        catch (AccessViolationException)
-                        {
-                            // Use-cases such as Remote Desktop usage might throw this exception.
-                            // Applications with Administrative privileges can however override
-                            // this exception when run in a production environment.
-                        }
-                        catch (NullReferenceException)
-                        {
+                            IDataObject? dataObj = GetClipboardDataObject();
+                            SetClipboardFiles(dataObj);
+                            SetClipboardImage(dataObj);
+                            SetClipboardText(dataObj);
+                            SetClipboardOther(dataObj);
                         }
                     }
-
-                    // Provides support for multi-instance clipboard monitoring.
-                    _ = SendMessage(_chainedWnd, m.Msg, m.WParam, m.LParam);
+                    catch (AccessViolationException)
+                    {
+                        // Use-cases such as Remote Desktop usage might throw this exception.
+                        // Applications with Administrative privileges can however override
+                        // this exception when run in a production environment.
+                    }
+                    catch (NullReferenceException)
+                    {
+                    }
+                    finally
+                    {
+                        // Provides support for multi-instance clipboard monitoring.
+                        _ = SendMessage(_chainedWnd, m.Msg, m.WParam, m.LParam);
+                    }
 
                     break;
                 }
