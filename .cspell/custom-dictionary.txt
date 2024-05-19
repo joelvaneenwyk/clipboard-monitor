@@ -9,6 +9,7 @@ buildhelp
 bytearray
 cachefile
 CHANGECBCHAIN
+Uncatchable
 checkin
 codegen
 codeql

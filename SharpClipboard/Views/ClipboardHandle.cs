@@ -373,7 +373,7 @@ public sealed partial class ClipboardHandle : Form
 
             _processName = Process.GetProcessById(GetProcessID(hwnd)).ProcessName;
             _executablePath = Process.GetProcessById(GetProcessID(hwnd)).MainModule?.FileName;
-            _executableName = _executablePath?[(_executablePath.LastIndexOf('\\') + 1)..];
+            _executableName = _executablePath?[(_executablePath.LastIndexOf('/') + 1)..];
         }
         catch (ArgumentException)
         {
