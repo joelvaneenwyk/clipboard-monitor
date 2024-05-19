@@ -27,17 +27,18 @@
     <RepositoryUrl>https://github.com/joelvaneenwyk/SharpClipboard.git</RepositoryUrl>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <SignAssembly>False</SignAssembly>
     <Title>Mycoshiro </Title>
     <NeutralLanguage>en</NeutralLanguage>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <AnalysisLevel>latest-all</AnalysisLevel>
+    <AnalysisLevel>6.0-all</AnalysisLevel>
     <DocumentationFile>$(OutputPath)SharpClipboard.xml</DocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageId>Mycoshiro.Windows.Forms.SharpClipboard</PackageId>
+    <EnableNETAnalyzers>False</EnableNETAnalyzers>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows|x64'">
     <DebugType>portable</DebugType>
@@ -46,8 +47,11 @@
     <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="bin/**" />
     <Compile Remove="obj/**" />
+    <EmbeddedResource Remove="bin/**" />
     <EmbeddedResource Remove="obj/**" />
+    <None Remove="bin/**" />
     <None Remove="obj/**" />
   </ItemGroup>
   <ItemGroup>
@@ -77,5 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="4.9.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>

@@ -1,13 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net8.0-windows</TargetFrameworks>
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x64</Platforms>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <AnalysisLevel>6.0-all</AnalysisLevel>
+    <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
+    <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
+    <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>False</EnableNETAnalyzers>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <DebugType>portable</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="bin/**" />
     <Compile Remove="obj/**" />
+    <EmbeddedResource Remove="bin/**" />
     <EmbeddedResource Remove="obj/**" />
+    <None Remove="bin/**" />
     <None Remove="obj/**" />
   </ItemGroup>
   <ItemGroup>

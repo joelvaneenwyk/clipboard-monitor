@@ -8,7 +8,10 @@ Browsable
 buildhelp
 bytearray
 cachefile
+contentFiles
+buildTransitive
 CHANGECBCHAIN
+Uncatchable
 checkin
 codegen
 codeql

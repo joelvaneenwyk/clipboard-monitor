@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Design;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -28,6 +29,8 @@ using JetBrains.Annotations;
 using Mycoshiro.Windows.Forms.Views;
 using static Mycoshiro.Windows.Forms.SharpClipboard;
 using Timer = System.Windows.Forms.Timer;
+
+#pragma warning disable IDE0079
 
 namespace Mycoshiro.Windows.Forms;
 
@@ -87,6 +90,7 @@ public class ClipboardChangedEventArgs : EventArgs
 /// detecting any copied/cut data and the type of data it is.
 /// </summary>
 [PublicAPI]
+[MustDisposeResource]
 [Designer(typeof(SharpClipboardDesigner))]
 [DefaultEvent("ClipboardChanged")]
 [DefaultProperty("MonitorClipboard")]
@@ -237,7 +241,7 @@ public sealed partial class SharpClipboard : Component
     /// </summary>
     [PublicAPI]
     [Browsable(false)]
-    public string? ClipboardFile { get; internal set; }
+    public string? ClipboardFile { get; set; }
 
     private readonly List<string?> _clipboardFiles = [];
 
@@ -375,6 +379,7 @@ public sealed partial class SharpClipboard : Component
     /// auto-shutdown once the service has started.
     /// </summary>
     [SupportedOSPlatform("windows6.0")]
+    [SuppressMessage("ReSharper", "InvertIf", Justification = "Sufficiently short function.")]
     private void OnLoad(object? sender, EventArgs e)
     {
         if (!DesignMode)
@@ -390,6 +395,7 @@ public sealed partial class SharpClipboard : Component
 /// <summary>
 /// Component designer for action lists.
 /// </summary>
+[MustDisposeResource]
 public class SharpClipboardDesigner : ComponentDesigner
 {
     private readonly Lazy<DesignerActionListCollection> _actionLists;
@@ -397,17 +403,12 @@ public class SharpClipboardDesigner : ComponentDesigner
     /// <summary>
     /// Initializes a new instance of the <see cref="SharpClipboardDesigner" /> class.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Style", "IDE0028:Simplify collection initialization", Justification = "<Pending>")]
     public SharpClipboardDesigner()
     {
         _actionLists = new Lazy<DesignerActionListCollection>(
         () =>
         {
-            DesignerActionListCollection lists = new()
-            {
-                new SharpClipboardComponentActionList(Component)
-            };
+            DesignerActionListCollection lists = [new SharpClipboardComponentActionList(Component)];
             return lists;
         }, LazyThreadSafetyMode.ExecutionAndPublication);
     }
@@ -501,21 +502,16 @@ public sealed class SharpClipboardComponentActionList : DesignerActionList
     /// associates their targets, and collects them into a list.
     /// </summary>
     [SupportedOSPlatform("windows")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Style", "IDE0028:Simplify collection initialization", Justification = "<Pending>")]
-    public override DesignerActionItemCollection GetSortedActionItems()
-    {
-        PropertyDescriptor? propertyDescriptor = GetPropertyDescriptor(Component, nameof(MonitorClipboard));
-        string actionPropertyName = propertyDescriptor?.Description ?? string.Empty;
-        DesignerActionItemCollection result = new();
-        result.Add(new DesignerActionHeaderItem(nameof(Behavior)));
-        result.Add(new DesignerActionPropertyItem(
-                    nameof(MonitorClipboard),
-                    "Monitor Clipboard",
-                    nameof(Behavior),
-                    actionPropertyName));
-        return result;
-    }
+    public override DesignerActionItemCollection GetSortedActionItems() =>
+        [
+            new DesignerActionHeaderItem(nameof(Behavior)),
+            new DesignerActionPropertyItem(
+                nameof(MonitorClipboard),
+                "Monitor Clipboard",
+                nameof(Behavior),
+                GetPropertyDescriptor(Component, nameof(MonitorClipboard))?.Description ?? string.Empty)
+
+        ];
 }
 
 /// <summary>
@@ -542,6 +538,7 @@ public class ObservableDataFormats
     /// Gets or sets a value indicating whether all the
     /// supported observable formats will be monitored.
     /// </summary>
+    [PublicAPI]
     [ParenthesizePropertyName(true)]
     [Category("#Clipboard: Behaviour")]
     [Description("Sets a value indicating whether all the supported " +
@@ -605,19 +602,18 @@ public class ObservableDataFormats
 /// where the clipboard's content were copied.
 /// </summary>
 [EditorBrowsable(EditorBrowsableState.Never)]
+[SuppressMessage("ReSharper", "TooManyDependencies", Justification = "Does not contain too many dependencies.")]
 public sealed class SourceApplication
 {
     /// <summary>
     /// Creates a new <see cref="SourceApplication" /> class-instance.
     /// </summary>
-    /// <param name="id">The application's Id.</param>
+    /// <param name="id">The application's identifier.</param>
     /// <param name="handle">The application's handle.</param>
     /// <param name="name">The application's name.</param>
     /// <param name="title">The application's title.</param>
     /// <param name="path">The application's path.</param>
-    internal SourceApplication(
-        int id, IntPtr handle,
-        string? name, string? title, string? path)
+    internal SourceApplication(int id, IntPtr handle, string? name, string? title, string? path)
     {
         Id = id;
         Name = name;
