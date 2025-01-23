@@ -4,11 +4,11 @@ ignorePaths:
   - "**/.vs/**"
   - "**/bin/**"
 dictionaryDefinitions:
-  - name: custom-dictionary
-    path: ./.cspell/custom-dictionary.txt
+  - name: clipboard-monitor
+    path: ./.github/config/clipboard-monitor.dict
     addWords: true
 dictionaries:
-  - custom-dictionary
+  - clipboard-monitor
 words: []
 ignoreWords: []
 import: []
